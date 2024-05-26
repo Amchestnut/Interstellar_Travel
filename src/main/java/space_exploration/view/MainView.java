@@ -92,8 +92,8 @@ public class MainView extends Stage {
         column11.setCellValueFactory(new PropertyValueFactory<>("orbital_speed"));
         column12.setCellValueFactory(new PropertyValueFactory<>("habitable"));
 
-        celestialBodiesTV.setItems(celestialBodiesOL);
-        celestialBodiesTV.getColumns().addAll(column1, column2, column3, column4, column5, column6, column7, column8, column9, column10, column11, column12);
+        //celestialBodiesTV.setItems(celestialBodiesOL);
+       // celestialBodiesTV.getColumns().addAll(column1, column2, column3, column4, column5, column6, column7, column8, column9, column10, column11, column12);
     }
 
     private void positioning() {
@@ -117,7 +117,7 @@ public class MainView extends Stage {
         topHBox.getChildren().addAll(topsideLeft, middleVBox, topsideRight);
         topHBox.setSpacing(50); // Spacing between the ListViews
 
-        bottomTabel.getChildren().addAll(celestialBodiesTV);
+       // bottomTabel.getChildren().addAll(celestialBodiesTV);
 
         // Assembling the layout
         root.setTop(topHBox);

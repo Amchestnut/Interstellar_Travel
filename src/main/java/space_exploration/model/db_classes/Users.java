@@ -46,6 +46,8 @@ public class Users implements IPublisher {
 
     public void setUsername(String username) {
         this.username = username;
+        notifySubscribers(new MessageUpdate(this));
+
     }
 
     public String getPassword() {
@@ -54,6 +56,8 @@ public class Users implements IPublisher {
 
     public void setPassword(String password) {
         this.password = password;
+        notifySubscribers(new MessageUpdate(this));
+
     }
 
     public String getEmail() {
@@ -62,6 +66,8 @@ public class Users implements IPublisher {
 
     public void setEmail(String email) {
         this.email = email;
+        notifySubscribers(new MessageUpdate(this));
+
     }
 
     public String getName() {
@@ -70,6 +76,8 @@ public class Users implements IPublisher {
 
     public void setName(String name) {
         this.name = name;
+        notifySubscribers(new MessageUpdate(this));
+
     }
 
     public String getSurname() {
@@ -78,6 +86,8 @@ public class Users implements IPublisher {
 
     public void setSurname(String surname) {
         this.surname = surname;
+        notifySubscribers(new MessageUpdate(this));
+
     }
 
     public Date getDateOfBirth() {
@@ -86,6 +96,8 @@ public class Users implements IPublisher {
 
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+        notifySubscribers(new MessageUpdate(this));
+
     }
 
     public Date getLastRegistrationDate() {
@@ -94,6 +106,7 @@ public class Users implements IPublisher {
 
     public void setLastRegistrationDate(Date lastRegistrationDate) {
         this.lastRegistrationDate = lastRegistrationDate;
+        notifySubscribers(new MessageUpdate(this));
     }
 
     @Override

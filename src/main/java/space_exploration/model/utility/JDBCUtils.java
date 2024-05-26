@@ -1,5 +1,6 @@
 package space_exploration.model.utility;
 
+import javafx.scene.control.Alert;
 import space_exploration.model.db_classes.*;
 
 import java.sql.*;
@@ -328,19 +329,54 @@ public class JDBCUtils {
         }
     }
     public static void insertIntoUsers(String username, String password, String email, String name, String surname, Date dateOfBirth, Date lastRegistrationDate) {
-        String query = "INSERT INTO Users (username, password, email, name, surname, date_of_birth, last_registration_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String checkUsernameQuery = "SELECT COUNT(*) FROM Users WHERE username = ?";
+        String checkEmailQuery = "SELECT COUNT(*) FROM Users WHERE email = ?";
+        String insertQuery = "INSERT INTO Users (username, password, email, name, surname, date_of_birth, last_registration_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
         try {
-            PreparedStatement statement = connection.prepareStatement(query);
             connection.setAutoCommit(false);
-            statement.setString(1, username);
-            statement.setString(2, password);
-            statement.setString(3, email);
-            statement.setString(4, name);
-            statement.setString(5, surname);
-            statement.setDate(6, dateOfBirth);
-            statement.setDate(7, lastRegistrationDate);
-            statement.executeUpdate();
-            connection.commit();
+
+            // Check if username exists
+            try (PreparedStatement checkUsernameStatement = connection.prepareStatement(checkUsernameQuery)) {
+                checkUsernameStatement.setString(1, username);
+                try (ResultSet rs = checkUsernameStatement.executeQuery()) {
+                    if (rs.next() && rs.getInt(1) > 0) {
+                        showAlert("Error","Username already exists.");
+                        System.out.println("Username already exists.");
+                        return;
+                    }
+                }
+            }
+
+            // Check if email exists
+            try (PreparedStatement checkEmailStatement = connection.prepareStatement(checkEmailQuery)) {
+                checkEmailStatement.setString(1, email);
+                try (ResultSet rs = checkEmailStatement.executeQuery()) {
+                    if (rs.next() && rs.getInt(1) > 0) {
+                        showAlert("Error","Username already exists.");
+
+                        System.out.println("Email already exists.");
+                        return;
+                    }
+                }
+            }
+
+            // Insert new user if both checks pass
+            try (PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
+                insertStatement.setString(1, username);
+                insertStatement.setString(2, password);
+                insertStatement.setString(3, email);
+                insertStatement.setString(4, name);
+                insertStatement.setString(5, surname);
+                insertStatement.setDate(6, dateOfBirth);
+                insertStatement.setDate(7, lastRegistrationDate);
+                insertStatement.executeUpdate();
+                connection.commit();
+                System.out.println("User successfully inserted.");
+            } catch (SQLException e) {
+                connection.rollback();
+                throw new RuntimeException(e);
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -713,9 +749,28 @@ public static void updateDeaths(int id, int celestialBodyId, int userId, Date de
             throw new RuntimeException(e);
         }
     }
+    public static boolean checkLogin(String userName, String password) {
+        String query = "SELECT EXISTS(SELECT 1 FROM Users WHERE username=? AND password=?)";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, userName);
+            statement.setString(2, password);
+            ResultSet resultSet = statement.executeQuery();
 
+            if (resultSet.next())
+                return resultSet.getBoolean(1);
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
     private JDBCUtils() {
     }
-
+    private static void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 }
