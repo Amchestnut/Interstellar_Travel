@@ -130,6 +130,7 @@ public class MainView extends Stage {
 //        pickPlanetBtn.setOnAction(new PickPlanetAction(this));      /// this je view
 //        pickPersonBtn.setOnAction(new PickPersonAction(this));
 //        filterBtn.setOnAction(new FilterSomething(this));
+        // komentar
     }
 
 }
