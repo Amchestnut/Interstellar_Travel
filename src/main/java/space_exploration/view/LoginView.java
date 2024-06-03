@@ -5,36 +5,37 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-import space_exploration.controller.SignInAction;
+import space_exploration.ApplicationFramework;
+import space_exploration.controller.LoginAction;
 
-public class SignInView extends Stage {
+public class LoginView extends Scene {
 
+    private GridPane grid;
     private Label usernameLB;
     private Label passwordLB;
     private TextField usernameTF;
     private PasswordField passwordTF;
-    private Button loginBtn;
+    private Button loginButton;
+    private Button backButton;
 
-    public SignInView() {
+    public LoginView() {
+        super(new GridPane(), 400, 450); // Pass the GridPane directly to the Scene constructor
+        this.grid = (GridPane) this.getRoot();  // Retrieve the root as GridPane
         initialization();
         positioning();
         actions();
-        setupStage();
     }
 
     private void initialization() {
         usernameLB = new Label("Username:");
         passwordLB = new Label("Password:");
-
         usernameTF = new TextField();
         passwordTF = new PasswordField();
-
-        loginBtn = new Button("click here to login");
+        loginButton = new Button("Click here to login");
+        backButton = new Button("Back");
     }
 
     private void positioning() {
-        GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setVgap(10);
         grid.setHgap(10);
@@ -44,24 +45,13 @@ public class SignInView extends Stage {
         grid.add(usernameTF, 1, 0);
         grid.add(passwordLB, 0, 1);
         grid.add(passwordTF, 1, 1);
-
-
-        loginBtn = new Button("Click here to register");
-        grid.add(loginBtn, 1, 7, 2, 1);
-//        loginBtn.setOnAction(e -> onSubmit());
-
-        Scene scene = new Scene(grid, 400, 450);
-        this.setScene(scene);
+        grid.add(loginButton, 1, 2); // Adjusted grid placement for the button
+        grid.add(backButton, 1, 3);  // Position the back button
     }
 
     private void actions() {
-        loginBtn.setOnAction(new SignInAction(this));  // GPT: or should i send text entered in textfield here to the class SubmitRegistrationAction?
-        // Define button actions or other event responses here
-    }
-
-    private void setupStage() {
-        this.setTitle("Registration Form");
-        this.show();
+        loginButton.setOnAction(new LoginAction(this));  // GPT: Adjust based on your event handling strategy
+        backButton.setOnAction(e -> ApplicationFramework.getInstance().showStartView());
     }
 
 
@@ -102,10 +92,10 @@ public class SignInView extends Stage {
     }
 
     public Button getLoginBtn() {
-        return loginBtn;
+        return loginButton;
     }
 
     public void setLoginBtn(Button loginBtn) {
-        this.loginBtn = loginBtn;
+        this.loginButton = loginBtn;
     }
 }

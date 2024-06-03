@@ -9,10 +9,10 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.Random;
 
-public class SubmitRegistrationAction implements EventHandler<ActionEvent> {
+public class RegistrationAction implements EventHandler<ActionEvent> {
     private RegistrationView registrationView;
 
-    public SubmitRegistrationAction(RegistrationView registrationView) {
+    public RegistrationAction(RegistrationView registrationView) {
         this.registrationView = registrationView;
     }
 

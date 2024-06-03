@@ -9,10 +9,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-import space_exploration.controller.SubmitRegistrationAction;
+import space_exploration.ApplicationFramework;
+import space_exploration.controller.RegistrationAction;
 
-public class RegistrationView extends Stage {
+public class RegistrationView extends Scene {
+    private GridPane grid;
     private Label usernameLB;
     private Label passwordLB;
     private Label emailLB;
@@ -28,12 +29,14 @@ public class RegistrationView extends Stage {
     private DatePicker dateOfBirthDP;
 
     private Button submitBtn;
+    private Button backButton;
 
     public RegistrationView() {
+        super(new GridPane(), 400, 450);
+        this.grid = (GridPane) this.getRoot();
         initialization();
         positioning();
         actions();
-        setupStage();
     }
 
     private void initialization() {
@@ -50,10 +53,12 @@ public class RegistrationView extends Stage {
         nameTF = new TextField();
         surnameTF = new TextField();
         dateOfBirthDP = new DatePicker();
+
+        submitBtn = new Button("Click here to register");
+        backButton = new Button("Back");
     }
 
     private void positioning() {
-        GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setVgap(10);
         grid.setHgap(10);
@@ -72,31 +77,14 @@ public class RegistrationView extends Stage {
         grid.add(dateOfBirthLB, 0, 5);
         grid.add(dateOfBirthDP, 1, 5);
 
-        submitBtn = new Button("Click here to register");
+        grid.add(backButton, 1, 8);
         grid.add(submitBtn, 1, 7, 2, 1);
-//        submitBtn.setOnAction(e -> onSubmit());
-
-        Scene scene = new Scene(grid, 400, 450);
-        this.setScene(scene);
     }
 
     private void actions() {
-        submitBtn.setOnAction(new SubmitRegistrationAction(this));  // GPT: or should i send text entered in textfield here to the class SubmitRegistrationAction?
-        // Define button actions or other event responses here
+        submitBtn.setOnAction(new RegistrationAction(this));  // GPT: or should i send text entered in textfield here to the class SubmitRegistrationAction?
+        backButton.setOnAction(e -> ApplicationFramework.getInstance().showStartView());
     }
-
-    private void onSubmit() {
-        // Handle registration logic here
-        System.out.println("Registration submitted!");
-        System.out.println("Username: " + usernameTF.getText());
-        // More print statements or logic can be added here
-    }
-
-    private void setupStage() {
-        this.setTitle("Registration Form");
-        this.show();
-    }
-
 
 
     /// getters setters
