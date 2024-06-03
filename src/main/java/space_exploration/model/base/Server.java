@@ -13,6 +13,7 @@ public class Server {
     public static final Server SERVER = new Server();
 
     private final List<CelestialBodies> celestialBodies = new ArrayList<>();
+    private final List<CelestialBodies> habitableCelestialBodies = new ArrayList<>();
     private final List<HabitabilityCriteria> habitabilityCriteria = new ArrayList<>();
     private final List<Missions> missions = new ArrayList<>();
     private final List<Journeys> journeys = new ArrayList<>();
@@ -43,6 +44,16 @@ public class Server {
         this.celestialBodies.clear();
         this.celestialBodies.addAll(celestialBodies);
     }
+
+    public List<CelestialBodies> getHabitableCelestialBodies() {
+        return habitableCelestialBodies;
+    }
+
+
+//    public void setHabitableCelestialBodies(Collection<CelestialBodies> celestialBodies) {
+//        this.celestialBodies.clear();
+//        this.celestialBodies.addAll(celestialBodies);
+//    }
 
     public List<HabitabilityCriteria> getHabitabilityCriteria() {
         return habitabilityCriteria;

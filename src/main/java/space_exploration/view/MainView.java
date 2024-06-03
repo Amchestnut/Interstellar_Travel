@@ -22,50 +22,50 @@ import space_exploration.model.db_classes.Journeys;
 
 import java.time.LocalDate;
 
-public class MainView extends Stage {
+public class MainView extends Scene {
 
-    private final BorderPane root = new BorderPane();
+    private BorderPane root;
     private Label controlPanel;
-    private Button pickPersonBtn;
-    private Button pickPlanetBtn;
-    private Button filterBtn;
+    private Button pickPersonButton;
+    private Button pickPlanetButton;
+    private Button filterButton;
 
     private ObservableList<Journeys> journeysOL;
     private ObservableList<HousingPurchases> housingOL;
     private ObservableList<CelestialBodies> celestialBodiesOL;
 
     private ListView<Journeys> journeysLV;
-
     private ListView<HousingPurchases> housingLV;
 
     private TableView<CelestialBodies> celestialBodiesTV;
 
     public MainView() {
-        super.setTitle("Interstellar");
+        super(new BorderPane(), 1200, 900);
+        this.root = (BorderPane) this.getRoot();
 
         initialisation();
         positioning();
         actions();
-
-        Scene scene = new Scene(root, 1200, 900);
-        super.setScene(scene);
-       // super.setScene(new Scene(this.root));
     }
 
     private void initialisation(){
-        filterBtn = new Button("Filter something");        /// maybe add money per resident ??? So they have money to buy
-        pickPersonBtn= new Button("Pick this person");               ///
-        pickPlanetBtn = new Button("Pick this planet");
+        filterButton = new Button("Filter something");        /// maybe add money per resident ??? So they have money to buy
+        pickPersonButton= new Button("Pick this person");               ///
+        pickPlanetButton = new Button("Pick this planet");
 
         controlPanel = new Label("Control panel...");
 
         journeysOL = FXCollections.observableArrayList(Server.SERVER.getJourneys());
         housingOL = FXCollections.observableArrayList(Server.SERVER.getHousingPurchases());
+        /// here i want to check if the celestial body is habitale or not with a QUERY to database, saying WHERE AND SATYSFYING all the criteria for a celestial body to be habitable
+        /// gpt gpt gpt gpt gpt
+        celestialBodiesOL = FXCollections.observableArrayList(Server.SERVER.getCelestialBodies());
 
         journeysLV = new ListView<>(journeysOL);
         housingLV = new ListView<>(housingOL);                                   //   journeysLV.setItems(FXCollections.observableArrayList("Mission 1", "Mission 2", "Mission 3"));
 
-        celestialBodiesOL = FXCollections.observableArrayList(Server.SERVER.getCelestialBodies());
+        celestialBodiesTV = new TableView<>(celestialBodiesOL);
+
         TableColumn<CelestialBodies, String> column1 = new TableColumn<>("Name");
         TableColumn<CelestialBodies, String> column2 = new TableColumn<>("Type");
         TableColumn<CelestialBodies, String> column3 = new TableColumn<>("Discovered date");
@@ -81,21 +81,37 @@ public class MainView extends Stage {
 
         column1.setCellValueFactory(new PropertyValueFactory<>("name"));
         column2.setCellValueFactory(new PropertyValueFactory<>("type"));
-        column3.setCellValueFactory(new PropertyValueFactory<>("discovered_date"));
+        column3.setCellValueFactory(new PropertyValueFactory<>("discoveredDate"));
         column4.setCellValueFactory(new PropertyValueFactory<>("researched"));
-        column5.setCellValueFactory(new PropertyValueFactory<>("mean_distance_from_star"));
-        column6.setCellValueFactory(new PropertyValueFactory<>("lowest_temperature"));
-        column7.setCellValueFactory(new PropertyValueFactory<>("highest_temperature"));
-        column8.setCellValueFactory(new PropertyValueFactory<>("oxygen_percentage"));
-        column9.setCellValueFactory(new PropertyValueFactory<>("other_gas_percentage"));
-        column10.setCellValueFactory(new PropertyValueFactory<>("gravitational_field_height"));
-        column11.setCellValueFactory(new PropertyValueFactory<>("orbital_speed"));
+        column5.setCellValueFactory(new PropertyValueFactory<>("meanDistanceFromStar"));
+        column6.setCellValueFactory(new PropertyValueFactory<>("lowestTemperature"));
+        column7.setCellValueFactory(new PropertyValueFactory<>("highestTemperature"));
+        column8.setCellValueFactory(new PropertyValueFactory<>("oxygenPercentage"));
+        column9.setCellValueFactory(new PropertyValueFactory<>("otherGasPercentage"));
+        column10.setCellValueFactory(new PropertyValueFactory<>("gravitationalFieldHeight"));
+        column11.setCellValueFactory(new PropertyValueFactory<>("orbitalSpeed"));
         column12.setCellValueFactory(new PropertyValueFactory<>("habitable"));
 
+
         //celestialBodiesTV.setItems(celestialBodiesOL);
-       // celestialBodiesTV.getColumns().addAll(column1, column2, column3, column4, column5, column6, column7, column8, column9, column10, column11, column12);
+        celestialBodiesTV.getColumns().addAll(column1, column2, column3, column4, column5, column6, column7, column8, column9, column10, column11, column12);
     }
 
+    private void positioning() {
+        // Organize layout
+        VBox leftVBox = new VBox(10, journeysLV);
+        VBox rightVBox = new VBox(10, housingLV);
+        VBox centerVBox = new VBox(10, controlPanel, pickPlanetButton, pickPersonButton, filterButton);
+        centerVBox.setAlignment(Pos.CENTER);
+
+        HBox topHBox = new HBox(50, leftVBox, centerVBox, rightVBox); // Increase spacing for better visual separation
+
+        // Position elements in BorderPane
+        root.setTop(topHBox);
+        root.setCenter(celestialBodiesTV);  // Ensuring TableView is added
+    }
+
+    /*   (OLD POSITIONING, it sucks a bit)
     private void positioning() {
         VBox topsideLeft = new VBox(10);
         VBox middleVBox = new VBox(10);
@@ -110,7 +126,7 @@ public class MainView extends Stage {
         topsideRight.setSpacing(20);
         topsideRight.getChildren().addAll(housingLV);
 
-        middleVBox.getChildren().addAll(controlPanel, pickPlanetBtn, pickPersonBtn, filterBtn);
+        middleVBox.getChildren().addAll(controlPanel, pickPlanetButton, pickPersonButton, filterButton);
         middleVBox.setStyle("-fx-alignment: center");
         middleVBox.setAlignment(Pos.CENTER);
 
@@ -124,12 +140,12 @@ public class MainView extends Stage {
 //        root.setCenter();
         root.setBottom(bottomTabel);
     }
-
+     */
 
     private void actions() {
-//        pickPlanetBtn.setOnAction(new PickPlanetAction(this));      /// this je view
-//        pickPersonBtn.setOnAction(new PickPersonAction(this));
-//        filterBtn.setOnAction(new FilterSomething(this));
+//        pickPlanetButton.setOnAction(new PickPlanetAction(this));      /// this je view
+//        pickPersonButton.setOnAction(new PickPersonAction(this));
+//        filterButton.setOnAction(new FilterSomething(this));
         // komentar
     }
 

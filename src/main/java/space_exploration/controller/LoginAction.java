@@ -3,6 +3,7 @@ package space_exploration.controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
+import space_exploration.ApplicationFramework;
 import space_exploration.model.utility.JDBCUtils;
 import space_exploration.view.LoginView;
 
@@ -22,8 +23,7 @@ public class LoginAction implements EventHandler<ActionEvent> {
             String password = loginView.getPasswordTF().getText(); // Consider hashing this in a real application
 
             if(JDBCUtils.checkLogin(username, password)){
-                // ok
-                // should open MAIN SCENE (change scenes somehow)
+                ApplicationFramework.getInstance().showMainView();          // if everythings ok, go to main view
             }
             else{
                 // not ok
