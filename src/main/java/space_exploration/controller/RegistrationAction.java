@@ -25,14 +25,8 @@ public class RegistrationAction implements EventHandler<ActionEvent> {
             String email = registrationView.getEmailTF().getText();
             String name = registrationView.getNameTF().getText();
             String surname = registrationView.getSurnameTF().getText();
-            LocalDate dobLocalDate = registrationView.getDateOfBirthDP().getValue();
-            Date dob = Date.valueOf(dobLocalDate);
 
-            int randomNumber = new Random().nextInt(100 - 18 + 1) + 18;
-            LocalDate lrdLocalDate = dobLocalDate.plusYears( randomNumber);
-            Date lrd = Date.valueOf(lrdLocalDate);
-
-            JDBCUtils.insertIntoUsers(username,password,email,name,surname,dob,lrd);
+            JDBCUtils.insertIntoUsers(username,password,email,name,surname);
             ApplicationFramework.getInstance().showStartView();
             // TODO: Dodati popup prozor gde pise uspesna registracija!!!
         }

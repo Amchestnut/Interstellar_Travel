@@ -25,7 +25,7 @@ public class ApplicationFramework {
         this.mainStage = stage;
         JDBCUtils.connect(); // Initialize your DB connection
 
-        showMainView();     // FIRST SCREEN
+        showStartView();     // FIRST SCREEN
         mainStage.show();
     }
 

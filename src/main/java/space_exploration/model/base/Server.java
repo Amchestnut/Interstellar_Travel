@@ -14,7 +14,7 @@ public class Server {
 
     private final List<CelestialBodies> celestialBodies = new ArrayList<>();
     private final List<CelestialBodies> habitableCelestialBodies = new ArrayList<>();
-    private final List<HabitabilityCriteria> habitabilityCriteria = new ArrayList<>();
+    //private final List<HabitabilityCriteria> habitabilityCriteria = new ArrayList<>();
     private final List<Missions> missions = new ArrayList<>();
     private final List<Journeys> journeys = new ArrayList<>();
     private final List<Users> users = new ArrayList<>();
@@ -25,7 +25,7 @@ public class Server {
 
     private Server() {
         this.setCelestialBodies(JDBCUtils.selectAllFromCelestialBodies());
-        this.setHabitabilityCriteria(JDBCUtils.selectAllFromHabitabilityCriteria());
+        //this.setHabitabilityCriteria(JDBCUtils.selectAllFromHabitabilityCriteria());
         this.setMissions(JDBCUtils.selectAllFromMissions());
         this.setJourneys(JDBCUtils.selectAllFromJourneys());
         this.setUsers(JDBCUtils.selectAllFromUsers());
@@ -50,19 +50,14 @@ public class Server {
     }
 
 
-//    public void setHabitableCelestialBodies(Collection<CelestialBodies> celestialBodies) {
-//        this.celestialBodies.clear();
-//        this.celestialBodies.addAll(celestialBodies);
+//    public List<HabitabilityCriteria> getHabitabilityCriteria() {
+//        return habitabilityCriteria;
 //    }
-
-    public List<HabitabilityCriteria> getHabitabilityCriteria() {
-        return habitabilityCriteria;
-    }
-
-    public void setHabitabilityCriteria(Collection<HabitabilityCriteria> habitabilityCriteria) {
-        this.habitabilityCriteria.clear();
-        this.habitabilityCriteria.addAll(habitabilityCriteria);
-    }
+//
+//    public void setHabitabilityCriteria(Collection<HabitabilityCriteria> habitabilityCriteria) {
+//        this.habitabilityCriteria.clear();
+//        this.habitabilityCriteria.addAll(habitabilityCriteria);
+//    }
 
     public List<Missions> getMissions() {
         return missions;

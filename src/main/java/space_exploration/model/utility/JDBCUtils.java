@@ -31,21 +31,21 @@ public class JDBCUtils {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
+                // Fetching values from the result set
                 int id = resultSet.getInt(1);
                 String name = resultSet.getString(2);
                 String type = resultSet.getString(3);
-                Date discoveredDate = resultSet.getDate(4);
-                boolean researched = resultSet.getBoolean(5);
-                float meanDistanceFromStar = resultSet.getFloat(6);
-                float lowestTemperature = resultSet.getFloat(7);
-                float highestTemperature = resultSet.getFloat(8);
-                float oxygenPercentage = resultSet.getFloat(9);
-                float otherGasPercentage = resultSet.getFloat(10);
-                float gravitationalFieldHeight = resultSet.getFloat(11);
-                float orbitalSpeed = resultSet.getFloat(12);
-                boolean habitable = resultSet.getBoolean(13);
+                boolean researched = resultSet.getBoolean(4);
+                float meanDistanceFromStar = resultSet.getFloat(5);
+                float lowestTemperature = resultSet.getFloat(6);
+                float highestTemperature = resultSet.getFloat(7);
+                float oxygenPercentage = resultSet.getFloat(8);
+                float otherGasPercentage = resultSet.getFloat(9);
+                float gravitationalFieldHeight = resultSet.getFloat(10);
+                float orbitalSpeed = resultSet.getFloat(11);
 
-                CelestialBodies body = new CelestialBodies(id, name, type, discoveredDate, researched, meanDistanceFromStar, lowestTemperature, highestTemperature, oxygenPercentage, otherGasPercentage, gravitationalFieldHeight, orbitalSpeed, habitable);
+                // Creating CelestialBodies object and adding it to the list
+                CelestialBodies body = new CelestialBodies(id, name, type, researched, meanDistanceFromStar, lowestTemperature, highestTemperature, oxygenPercentage, otherGasPercentage, gravitationalFieldHeight, orbitalSpeed);
                 bodies.add(body);
             }
         } catch (SQLException e) {
@@ -53,39 +53,8 @@ public class JDBCUtils {
         }
         return bodies;
     }
-    public static List<HabitabilityCriteria> selectAllFromHabitabilityCriteria() {
-        List<HabitabilityCriteria> criteriaList = new ArrayList<>();
-        String query = "SELECT * FROM HabitabilityCriteria";
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                int id = resultSet.getInt(1);
-                float meanDistanceFromStarMin = resultSet.getFloat(2);
-                float meanDistanceFromStarMax = resultSet.getFloat(3);
-                float lowestTemperatureMin = resultSet.getFloat(4);
-                float lowestTemperatureMax = resultSet.getFloat(5);
-                float highestTemperatureMin = resultSet.getFloat(6);
-                float highestTemperatureMax = resultSet.getFloat(7);
-                float temperatureDifferenceMax = resultSet.getFloat(8);
-                float oxygenPercentageMin = resultSet.getFloat(9);
-                float oxygenPercentageMax = resultSet.getFloat(10);
-                float totalGasPercentageMin = resultSet.getFloat(11);
-                float totalGasPercentageMax = resultSet.getFloat(12);
-                float gravitationalFieldHeightMin = resultSet.getFloat(13);
-                float orbitalSpeedMin = resultSet.getFloat(14);
-                float orbitalSpeedMax = resultSet.getFloat(15);
-                int maxDeathsUnder40LastYear = resultSet.getInt(16);
-                float maxTimeSpentOnBody = resultSet.getFloat(17);
 
-                HabitabilityCriteria criteria = new HabitabilityCriteria(id, meanDistanceFromStarMin, meanDistanceFromStarMax, lowestTemperatureMin, lowestTemperatureMax, highestTemperatureMin, highestTemperatureMax, temperatureDifferenceMax, oxygenPercentageMin, oxygenPercentageMax, totalGasPercentageMin, totalGasPercentageMax, gravitationalFieldHeightMin, orbitalSpeedMin, orbitalSpeedMax, maxDeathsUnder40LastYear, maxTimeSpentOnBody);
-                criteriaList.add(criteria);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return criteriaList;
-    }
+
     public static List<Missions> selectAllFromMissions() {
         List<Missions> missionsList = new ArrayList<>();
         String query = "SELECT * FROM Missions";
@@ -140,10 +109,8 @@ public class JDBCUtils {
                 String email = resultSet.getString(4);
                 String name = resultSet.getString(5);
                 String surname = resultSet.getString(6);
-                Date dateOfBirth = resultSet.getDate(7);
-                Date lastRegistrationDate = resultSet.getDate(8);
 
-                Users user = new Users(id, username, password, email, name, surname, dateOfBirth, lastRegistrationDate);
+                Users user = new Users(id, username, password, email, name, surname);
                 usersList.add(user);
             }
         } catch (SQLException e) {
@@ -233,72 +200,34 @@ public class JDBCUtils {
     }
 
 
-    public static void insertIntoCelestialBodies(String name, String type, Date discoveredDate, boolean researched,
+    public static void insertIntoCelestialBodies(String name, String type, boolean researched,
                                                  float meanDistanceFromStar, float lowestTemperature, float highestTemperature,
                                                  float oxygenPercentage, float otherGasPercentage, float gravitationalFieldHeight,
-                                                 float orbitalSpeed, boolean habitable) {
-        String query = "INSERT INTO CelestialBodies (name, type, discovered_date, researched, mean_distance_from_star, " +
-                "lowest_temperature, highest_temperature, oxygen_percentage, other_gas_percentage, gravitational_field_height, " +
-                "orbital_speed, habitable) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                                                 float orbitalSpeed) {
+        String query = "INSERT INTO CelestialBodies (name, type, researched, mean_distance_from_star, " +
+                "lowest_temperature, highest_temperature, oxygen_percentage, other_gas_percentage, " +
+                "gravitational_field_height, orbital_speed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             connection.setAutoCommit(false);
             statement.setString(1, name);
             statement.setString(2, type);
-            statement.setDate(3, discoveredDate);
-            statement.setBoolean(4, researched);
-            statement.setFloat(5, meanDistanceFromStar);
-            statement.setFloat(6, lowestTemperature);
-            statement.setFloat(7, highestTemperature);
-            statement.setFloat(8, oxygenPercentage);
-            statement.setFloat(9, otherGasPercentage);
-            statement.setFloat(10, gravitationalFieldHeight);
-            statement.setFloat(11, orbitalSpeed);
-            statement.setBoolean(12, habitable);
+            statement.setBoolean(3, researched);
+            statement.setFloat(4, meanDistanceFromStar);
+            statement.setFloat(5, lowestTemperature);
+            statement.setFloat(6, highestTemperature);
+            statement.setFloat(7, oxygenPercentage);
+            statement.setFloat(8, otherGasPercentage);
+            statement.setFloat(9, gravitationalFieldHeight);
+            statement.setFloat(10, orbitalSpeed);
             statement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-    public static void insertIntoHabitabilityCriteria(float meanDistanceFromStarMin, float meanDistanceFromStarMax,
-                                                      float lowestTemperatureMin, float lowestTemperatureMax,
-                                                      float highestTemperatureMin, float highestTemperatureMax,
-                                                      float temperatureDifferenceMax, float oxygenPercentageMin,
-                                                      float oxygenPercentageMax, float totalGasPercentageMin,
-                                                      float totalGasPercentageMax, float gravitationalFieldHeightMin,
-                                                      float orbitalSpeedMin, float orbitalSpeedMax, int maxDeathsUnder40LastYear,
-                                                      float maxTimeSpentOnBody, float v) {
-        String query = "INSERT INTO HabitabilityCriteria (mean_distance_from_star_min, mean_distance_from_star_max, " +
-                "lowest_temperature_min, lowest_temperature_max, highest_temperature_min, highest_temperature_max, " +
-                "temperature_difference_max, oxygen_percentage_min, oxygen_percentage_max, total_gas_percentage_min, " +
-                "total_gas_percentage_max, gravitational_field_height_min, orbital_speed_min, orbital_speed_max, " +
-                "max_deaths_under_40_last_year, max_time_spent_on_body) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            connection.setAutoCommit(false);
-            statement.setFloat(1, meanDistanceFromStarMin);
-            statement.setFloat(2, meanDistanceFromStarMax);
-            statement.setFloat(3, lowestTemperatureMin);
-            statement.setFloat(4, lowestTemperatureMax);
-            statement.setFloat(5, highestTemperatureMin);
-            statement.setFloat(6, highestTemperatureMax);
-            statement.setFloat(7, temperatureDifferenceMax);
-            statement.setFloat(8, oxygenPercentageMin);
-            statement.setFloat(9, oxygenPercentageMax);
-            statement.setFloat(10, totalGasPercentageMin);
-            statement.setFloat(11, totalGasPercentageMax);
-            statement.setFloat(12, gravitationalFieldHeightMin);
-            statement.setFloat(13, orbitalSpeedMin);
-            statement.setFloat(14, orbitalSpeedMax);
-            statement.setInt(15, maxDeathsUnder40LastYear);
-            statement.setFloat(16, maxTimeSpentOnBody);
-            statement.executeUpdate();
-            connection.commit();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
+
     public static void insertIntoMissions(int celestialBodyId, Date startDate, Date endDate) {
         String query = "INSERT INTO Missions (celestial_body_id, start_date, end_date) VALUES (?, ?, ?)";
         try {
@@ -328,10 +257,10 @@ public class JDBCUtils {
             throw new RuntimeException(e);
         }
     }
-    public static void insertIntoUsers(String username, String password, String email, String name, String surname, Date dateOfBirth, Date lastRegistrationDate) {
+    public static void insertIntoUsers(String username, String password, String email, String name, String surname) {
         String checkUsernameQuery = "SELECT COUNT(*) FROM Users WHERE username = ?";
         String checkEmailQuery = "SELECT COUNT(*) FROM Users WHERE email = ?";
-        String insertQuery = "INSERT INTO Users (username, password, email, name, surname, date_of_birth, last_registration_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String insertQuery = "INSERT INTO Users (username, password, email, name, surname) VALUES (?, ?, ?, ?, ?)";
 
         try {
             connection.setAutoCommit(false);
@@ -341,7 +270,7 @@ public class JDBCUtils {
                 checkUsernameStatement.setString(1, username);
                 try (ResultSet rs = checkUsernameStatement.executeQuery()) {
                     if (rs.next() && rs.getInt(1) > 0) {
-                        showAlert("Error","Username already exists.");
+                        showAlert("Error", "Username already exists.");
                         System.out.println("Username already exists.");
                         return;
                     }
@@ -353,7 +282,7 @@ public class JDBCUtils {
                 checkEmailStatement.setString(1, email);
                 try (ResultSet rs = checkEmailStatement.executeQuery()) {
                     if (rs.next() && rs.getInt(1) > 0) {
-                        showAlert("Error","Username already exists.");
+                        showAlert("Error", "Username already exists.");
 
                         System.out.println("Email already exists.");
                         return;
@@ -368,8 +297,6 @@ public class JDBCUtils {
                 insertStatement.setString(3, email);
                 insertStatement.setString(4, name);
                 insertStatement.setString(5, surname);
-                insertStatement.setDate(6, dateOfBirth);
-                insertStatement.setDate(7, lastRegistrationDate);
                 insertStatement.executeUpdate();
                 connection.commit();
                 System.out.println("User successfully inserted.");
@@ -381,6 +308,7 @@ public class JDBCUtils {
             throw new RuntimeException(e);
         }
     }
+
     public static void insertIntoJourneysUsers(int userId, int journeyId) {
         String query = "INSERT INTO JourneysUsers (user_id, journey_id) VALUES (?, ?)";
         try {
@@ -444,19 +372,6 @@ public class JDBCUtils {
             PreparedStatement statement = connection.prepareStatement(query);
             connection.setAutoCommit(false);
             statement.setInt(1, bodyId);
-            statement.executeUpdate();
-            connection.commit();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static void deleteFromHabitabilityCriteria(int criteriaId) {
-        String query = "DELETE FROM HabitabilityCriteria WHERE id = ?";
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            connection.setAutoCommit(false);
-            statement.setInt(1, criteriaId);
             statement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
@@ -556,29 +471,27 @@ public class JDBCUtils {
         }
     }
 
-    public static void updateCelestialBodies(int id, String name, String type, Date discoveredDate, boolean researched,
+    public static void updateCelestialBodies(int id, String name, String type, boolean researched,
                                              float meanDistanceFromStar, float lowestTemperature, float highestTemperature,
                                              float oxygenPercentage, float otherGasPercentage, float gravitationalFieldHeight,
-                                             float orbitalSpeed, boolean habitable) {
-        String query = "UPDATE CelestialBodies SET name=?, type=?, discovered_date=?, researched=?, " +
+                                             float orbitalSpeed) {
+        String query = "UPDATE CelestialBodies SET name=?, type=?, researched=?, " +
                 "mean_distance_from_star=?, lowest_temperature=?, highest_temperature=?, oxygen_percentage=?, " +
-                "other_gas_percentage=?, gravitational_field_height=?, orbital_speed=?, habitable=? WHERE id=?";
+                "other_gas_percentage=?, gravitational_field_height=?, orbital_speed=? WHERE id=?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             connection.setAutoCommit(false);
             statement.setString(1, name);
             statement.setString(2, type);
-            statement.setDate(3, discoveredDate);
-            statement.setBoolean(4, researched);
-            statement.setFloat(5, meanDistanceFromStar);
-            statement.setFloat(6, lowestTemperature);
-            statement.setFloat(7, highestTemperature);
-            statement.setFloat(8, oxygenPercentage);
-            statement.setFloat(9, otherGasPercentage);
-            statement.setFloat(10, gravitationalFieldHeight);
-            statement.setFloat(11, orbitalSpeed);
-            statement.setBoolean(12, habitable);
-            statement.setInt(13, id);
+            statement.setBoolean(3, researched);
+            statement.setFloat(4, meanDistanceFromStar);
+            statement.setFloat(5, lowestTemperature);
+            statement.setFloat(6, highestTemperature);
+            statement.setFloat(7, oxygenPercentage);
+            statement.setFloat(8, otherGasPercentage);
+            statement.setFloat(9, gravitationalFieldHeight);
+            statement.setFloat(10, orbitalSpeed);
+            statement.setInt(11, id);
             statement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
@@ -586,7 +499,8 @@ public class JDBCUtils {
         }
     }
 
-// Define update functions for other tables in a similar way
+
+    // Define update functions for other tables in a similar way
 public static void updateDeaths(int id, int celestialBodyId, int userId, Date deathDate, int ageAtDeath) {
     String query = "UPDATE Deaths SET celestial_body_id=?, user_id=?, death_date=?, age_at_death=? WHERE id=?";
     try {
@@ -603,45 +517,7 @@ public static void updateDeaths(int id, int celestialBodyId, int userId, Date de
         throw new RuntimeException(e);
     }
 }
-    public static void updateHabitabilityCriteria(int id, float meanDistanceFromStarMin, float meanDistanceFromStarMax,
-                                                  float lowestTemperatureMin, float lowestTemperatureMax,
-                                                  float highestTemperatureMin, float highestTemperatureMax,
-                                                  float temperatureDifferenceMax, float oxygenPercentageMin,
-                                                  float oxygenPercentageMax, float totalGasPercentageMin,
-                                                  float totalGasPercentageMax, float gravitationalFieldHeightMin,
-                                                  float orbitalSpeedMin, float orbitalSpeedMax, int maxDeathsUnder40LastYear,
-                                                  float maxTimeSpentOnBody) {
-        String query = "UPDATE HabitabilityCriteria SET mean_distance_from_star_min=?, mean_distance_from_star_max=?, " +
-                "lowest_temperature_min=?, lowest_temperature_max=?, highest_temperature_min=?, highest_temperature_max=?, " +
-                "temperature_difference_max=?, oxygen_percentage_min=?, oxygen_percentage_max=?, total_gas_percentage_min=?, " +
-                "total_gas_percentage_max=?, gravitational_field_height_min=?, orbital_speed_min=?, orbital_speed_max=?, " +
-                "max_deaths_under_40_last_year=?, max_time_spent_on_body=? WHERE id=?";
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            connection.setAutoCommit(false);
-            statement.setFloat(1, meanDistanceFromStarMin);
-            statement.setFloat(2, meanDistanceFromStarMax);
-            statement.setFloat(3, lowestTemperatureMin);
-            statement.setFloat(4, lowestTemperatureMax);
-            statement.setFloat(5, highestTemperatureMin);
-            statement.setFloat(6, highestTemperatureMax);
-            statement.setFloat(7, temperatureDifferenceMax);
-            statement.setFloat(8, oxygenPercentageMin);
-            statement.setFloat(9, oxygenPercentageMax);
-            statement.setFloat(10, totalGasPercentageMin);
-            statement.setFloat(11, totalGasPercentageMax);
-            statement.setFloat(12, gravitationalFieldHeightMin);
-            statement.setFloat(13, orbitalSpeedMin);
-            statement.setFloat(14, orbitalSpeedMax);
-            statement.setInt(15, maxDeathsUnder40LastYear);
-            statement.setFloat(16, maxTimeSpentOnBody);
-            statement.setInt(17, id);
-            statement.executeUpdate();
-            connection.commit();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
     public static void updateResidentialBuildings(int id, String name, int celestialBodyId, int capacity, Date buildDate) {
         String query = "UPDATE ResidentialBuildings SET name=?, celestial_body_id=?, capacity=?, build_date=? WHERE id=?";
         try {
@@ -707,9 +583,9 @@ public static void updateDeaths(int id, int celestialBodyId, int userId, Date de
             throw new RuntimeException(e);
         }
     }
-    public static void updateUsers(int id, String username, String password, String email, String name, String surname, Date dateOfBirth, Date lastRegistrationDate,
-                                   String newUsername, String newPassword, String newEmail, String newName, String newSurname, Date newDateOfBirth, Date newLastRegistrationDate) {
-        String query = "UPDATE Users SET username=?, password=?, email=?, name=?, surname=?, date_of_birth=?, last_registration_date=? WHERE id=? AND username=? AND password=? AND email=? AND name=? AND surname=? AND date_of_birth=? AND last_registration_date=?";
+    public static void updateUsers(int id, String username, String password, String email, String name, String surname,
+                                   String newUsername, String newPassword, String newEmail, String newName, String newSurname) {
+        String query = "UPDATE Users SET username=?, password=?, email=?, name=?, surname=? WHERE id=? AND username=? AND password=? AND email=? AND name=? AND surname=?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             connection.setAutoCommit(false);
@@ -718,22 +594,19 @@ public static void updateDeaths(int id, int celestialBodyId, int userId, Date de
             statement.setString(3, newEmail);
             statement.setString(4, newName);
             statement.setString(5, newSurname);
-            statement.setDate(6, newDateOfBirth);
-            statement.setDate(7, newLastRegistrationDate);
-            statement.setInt(8, id);
-            statement.setString(9, username);
-            statement.setString(10, password);
-            statement.setString(11, email);
-            statement.setString(12, name);
-            statement.setString(13, surname);
-            statement.setDate(14, dateOfBirth);
-            statement.setDate(15, lastRegistrationDate);
+            statement.setInt(6, id);
+            statement.setString(7, username);
+            statement.setString(8, password);
+            statement.setString(9, email);
+            statement.setString(10, name);
+            statement.setString(11, surname);
             statement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
     public static void updateHousingPurchases(int id, int userId, int buildingId, Date purchaseDate) {
         String query = "UPDATE HousingPurchases SET user_id=?, building_id=?, purchase_date=? WHERE id=?";
         try {

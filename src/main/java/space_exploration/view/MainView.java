@@ -19,6 +19,7 @@ import space_exploration.model.base.Server;
 import space_exploration.model.db_classes.CelestialBodies;
 import space_exploration.model.db_classes.HousingPurchases;
 import space_exploration.model.db_classes.Journeys;
+import space_exploration.model.db_classes.ResidentialBuildings;
 
 import java.time.LocalDate;
 
@@ -31,11 +32,11 @@ public class MainView extends Scene {
     private Button filterButton;
 
     private ObservableList<Journeys> journeysOL;
-    private ObservableList<HousingPurchases> housingOL;
+    private ObservableList<ResidentialBuildings> housingOL;
     private ObservableList<CelestialBodies> celestialBodiesOL;
 
     private ListView<Journeys> journeysLV;
-    private ListView<HousingPurchases> housingLV;
+    private ListView<ResidentialBuildings> housingLV;
 
     private TableView<CelestialBodies> celestialBodiesTV;
 
@@ -56,7 +57,7 @@ public class MainView extends Scene {
         controlPanel = new Label("Control panel...");
 
         journeysOL = FXCollections.observableArrayList(Server.SERVER.getJourneys());
-        housingOL = FXCollections.observableArrayList(Server.SERVER.getHousingPurchases());
+        housingOL = FXCollections.observableArrayList(Server.SERVER.getResidentialBuildings());
         /// here i want to check if the celestial body is habitale or not with a QUERY to database, saying WHERE AND SATYSFYING all the criteria for a celestial body to be habitable
         /// gpt gpt gpt gpt gpt
         celestialBodiesOL = FXCollections.observableArrayList(Server.SERVER.getCelestialBodies());
@@ -68,33 +69,29 @@ public class MainView extends Scene {
 
         TableColumn<CelestialBodies, String> column1 = new TableColumn<>("Name");
         TableColumn<CelestialBodies, String> column2 = new TableColumn<>("Type");
-        TableColumn<CelestialBodies, String> column3 = new TableColumn<>("Discovered date");
-        TableColumn<CelestialBodies, String> column4 = new TableColumn<>("Researched");
-        TableColumn<CelestialBodies, String> column5 = new TableColumn<>("Mean distance from star");
-        TableColumn<CelestialBodies, String> column6 = new TableColumn<>("Lowest temperature");
-        TableColumn<CelestialBodies, String> column7 = new TableColumn<>("Highest temperature");
-        TableColumn<CelestialBodies, String> column8 = new TableColumn<>("Oxygen percentage");
-        TableColumn<CelestialBodies, String> column9 = new TableColumn<>("Other gas percentage");
-        TableColumn<CelestialBodies, String> column10 = new TableColumn<>("Gravitational field height");
-        TableColumn<CelestialBodies, String> column11 = new TableColumn<>("Orbital speed");
-        TableColumn<CelestialBodies, String> column12 = new TableColumn<>("Habitable");
+        TableColumn<CelestialBodies, String> column3 = new TableColumn<>("Researched");
+        TableColumn<CelestialBodies, String> column4 = new TableColumn<>("Mean distance from star");
+        TableColumn<CelestialBodies, String> column5 = new TableColumn<>("Lowest temperature");
+        TableColumn<CelestialBodies, String> column6 = new TableColumn<>("Highest temperature");
+        TableColumn<CelestialBodies, String> column7 = new TableColumn<>("Oxygen percentage");
+        TableColumn<CelestialBodies, String> column8 = new TableColumn<>("Other gas percentage");
+        TableColumn<CelestialBodies, String> column9 = new TableColumn<>("Gravitational field height");
+        TableColumn<CelestialBodies, String> column10 = new TableColumn<>("Orbital speed");
 
         column1.setCellValueFactory(new PropertyValueFactory<>("name"));
         column2.setCellValueFactory(new PropertyValueFactory<>("type"));
-        column3.setCellValueFactory(new PropertyValueFactory<>("discoveredDate"));
-        column4.setCellValueFactory(new PropertyValueFactory<>("researched"));
-        column5.setCellValueFactory(new PropertyValueFactory<>("meanDistanceFromStar"));
-        column6.setCellValueFactory(new PropertyValueFactory<>("lowestTemperature"));
-        column7.setCellValueFactory(new PropertyValueFactory<>("highestTemperature"));
-        column8.setCellValueFactory(new PropertyValueFactory<>("oxygenPercentage"));
-        column9.setCellValueFactory(new PropertyValueFactory<>("otherGasPercentage"));
-        column10.setCellValueFactory(new PropertyValueFactory<>("gravitationalFieldHeight"));
-        column11.setCellValueFactory(new PropertyValueFactory<>("orbitalSpeed"));
-        column12.setCellValueFactory(new PropertyValueFactory<>("habitable"));
+        column3.setCellValueFactory(new PropertyValueFactory<>("researched"));
+        column4.setCellValueFactory(new PropertyValueFactory<>("meanDistanceFromStar"));
+        column5.setCellValueFactory(new PropertyValueFactory<>("lowestTemperature"));
+        column6.setCellValueFactory(new PropertyValueFactory<>("highestTemperature"));
+        column7.setCellValueFactory(new PropertyValueFactory<>("oxygenPercentage"));
+        column8.setCellValueFactory(new PropertyValueFactory<>("otherGasPercentage"));
+        column9.setCellValueFactory(new PropertyValueFactory<>("gravitationalFieldHeight"));
+        column10.setCellValueFactory(new PropertyValueFactory<>("orbitalSpeed"));
 
 
         //celestialBodiesTV.setItems(celestialBodiesOL);
-        celestialBodiesTV.getColumns().addAll(column1, column2, column3, column4, column5, column6, column7, column8, column9, column10, column11, column12);
+        celestialBodiesTV.getColumns().addAll(column1, column2, column3, column4, column5, column6, column7, column8, column9, column10);
     }
 
     private void positioning() {

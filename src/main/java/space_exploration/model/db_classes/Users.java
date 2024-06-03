@@ -16,18 +16,15 @@ public class Users implements IPublisher {
     private String email;
     private String name;
     private String surname;
-    private Date dateOfBirth;
-    private Date lastRegistrationDate;
 
-    public Users(int id, String username, String password, String email, String name, String surname, Date dateOfBirth, Date lastRegistrationDate) {
+    public Users(int id, String username, String password, String email, String name, String surname) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.name = name;
         this.surname = surname;
-        this.dateOfBirth = dateOfBirth;
-        this.lastRegistrationDate = lastRegistrationDate;
+
     }
 
     public int getId() {
@@ -90,24 +87,7 @@ public class Users implements IPublisher {
 
     }
 
-    public Date getDateOfBirth() {
-        return dateOfBirth;
-    }
 
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-        notifySubscribers(new MessageUpdate(this));
-
-    }
-
-    public Date getLastRegistrationDate() {
-        return lastRegistrationDate;
-    }
-
-    public void setLastRegistrationDate(Date lastRegistrationDate) {
-        this.lastRegistrationDate = lastRegistrationDate;
-        notifySubscribers(new MessageUpdate(this));
-    }
 
     @Override
     public String toString() {
@@ -118,8 +98,6 @@ public class Users implements IPublisher {
                 ", email='" + email + '\'' +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
-                ", lastRegistrationDate=" + lastRegistrationDate +
                 '}';
     }
     @Override
