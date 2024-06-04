@@ -4,12 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import space_exploration.ApplicationFramework;
-import space_exploration.model.db_classes.CelestialBodies;
 import space_exploration.model.utility.JDBCUtils;
 import space_exploration.view.RegistrationView;
-import java.sql.*;
-import java.time.LocalDate;
-import java.util.Random;
 
 public class RegistrationAction implements EventHandler<ActionEvent> {
     private RegistrationView registrationView;

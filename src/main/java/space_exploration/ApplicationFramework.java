@@ -4,6 +4,7 @@ package space_exploration;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import space_exploration.model.utility.JDBCUtils;
+import space_exploration.model.utility.Updater;
 import space_exploration.view.MainView;
 import space_exploration.view.RegistrationView;
 import space_exploration.view.LoginView;

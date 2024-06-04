@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Journeys implements IPublisher {
+public class Journey implements IPublisher {
     private List<ISubscriber> subscribers = new ArrayList<>();
 
     private int id;
@@ -17,7 +17,7 @@ public class Journeys implements IPublisher {
     private Timestamp departureDate;
     private Timestamp arrivalDate;
 
-    public Journeys(int id, int destinationBodyId, String vehicleCode, Timestamp departureDate, Timestamp arrivalDate) {
+    public Journey(int id, int destinationBodyId, String vehicleCode, Timestamp departureDate, Timestamp arrivalDate) {
         this.id = id;
         this.destinationBodyId = destinationBodyId;
         this.vehicleCode = vehicleCode;
@@ -77,7 +77,7 @@ public class Journeys implements IPublisher {
 
     @Override
     public String toString() {
-        return "Journeys{" +
+        return "Journey{" +
                 "id=" + id +
                 ", destinationBodyId=" + destinationBodyId +
                 ", vehicleCode='" + vehicleCode + '\'' +

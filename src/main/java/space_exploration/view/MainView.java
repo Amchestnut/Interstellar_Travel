@@ -13,10 +13,10 @@ import space_exploration.controller.FilterBuildingForThisCelestial;
 import space_exploration.controller.FilterJourneysForThisCelestial;
 import space_exploration.controller.PickPersonAction;
 import space_exploration.model.base.Server;
-import space_exploration.model.db_classes.CelestialBodies;
-import space_exploration.model.db_classes.Journeys;
-import space_exploration.model.db_classes.ResidentialBuildings;
-import space_exploration.model.db_classes.Users;
+import space_exploration.model.db_classes.CelestialBody;
+import space_exploration.model.db_classes.Journey;
+import space_exploration.model.db_classes.ResidentialBuilding;
+import space_exploration.model.db_classes.User;
 
 
 public class MainView extends Scene {
@@ -31,18 +31,18 @@ public class MainView extends Scene {
     private Button filterBuldingsForThisCelestialButton;
     private Button filterJourneysForThisCelestialButton;
 
-    private ObservableList<Journeys> journeysOL;
-    private ObservableList<ResidentialBuildings> housingOL;
-    private ObservableList<Users> allUsersOL;
-    private ObservableList<Users> pickedUsersOL;
-    private ObservableList<CelestialBodies> celestialBodiesOL;
+    private ObservableList<Journey> journeysOL;
+    private ObservableList<ResidentialBuilding> housingOL;
+    private ObservableList<User> allUsersOL;
+    private ObservableList<User> pickedUsersOL;
+    private ObservableList<CelestialBody> celestialBodiesOL;
 
-    private ListView<Journeys> journeysLV;      /// trains for all planets!!! We shows them all, but also add a filter button so it shows only trains for the picked CELESTIAL, and user can be able to pick any spacecraft and go interstellar
-    private ListView<ResidentialBuildings> housingLV;
-    private ListView<Users> allUsersLV;
-    private ListView<Users> pickedUsersLV;
+    private ListView<Journey> journeysLV;      /// trains for all planets!!! We shows them all, but also add a filter button so it shows only trains for the picked CELESTIAL, and user can be able to pick any spacecraft and go interstellar
+    private ListView<ResidentialBuilding> housingLV;
+    private ListView<User> allUsersLV;
+    private ListView<User> pickedUsersLV;
 
-    private TableView<CelestialBodies> celestialBodiesTV;
+    private TableView<CelestialBody> celestialBodiesTV;
 
     public MainView() {
         super(new BorderPane(), 1300, 1000);
@@ -67,9 +67,7 @@ public class MainView extends Scene {
         journeysOL = FXCollections.observableArrayList(Server.SERVER.getJourneys());
         housingOL = FXCollections.observableArrayList(Server.SERVER.getResidentialBuildings());
         /// here i want to check if the celestial body is habitale or not with a QUERY to database, saying WHERE AND SATYSFYING all the criteria for a celestial body to be habitable
-
-        /// TODO: treba fixovati ovaj allUsersOL da ne daje bas sve usere, nego samo one koji mogu u tom trenutku da putuju (vidi todo ispod)
-        allUsersOL = FXCollections.observableArrayList(Server.SERVER.getUsers());     // TODO: Query koji ce da izvuce sve usere koji su slobodni (koji nisu mrtvi, i koji se jos nisu nigde naselili (ali jesu registrovani)
+        allUsersOL = FXCollections.observableArrayList(Server.SERVER.getAvaiableUsers());
         /// TODO: da li staviti trenutnog logovanog usera u pickovane usere??
         pickedUsersOL = FXCollections.observableArrayList();                          // TODO: na pocetku prazno, a posle prilikom clicka na button, dodacemo usera jednog po jednog u listu izabranih za putovanje
 
@@ -82,16 +80,16 @@ public class MainView extends Scene {
 
         celestialBodiesTV = new TableView<>(celestialBodiesOL);
 
-        TableColumn<CelestialBodies, String> column1 = new TableColumn<>("Name");
-        TableColumn<CelestialBodies, String> column2 = new TableColumn<>("Type");
-        TableColumn<CelestialBodies, String> column3 = new TableColumn<>("Researched");
-        TableColumn<CelestialBodies, String> column4 = new TableColumn<>("Mean distance from star");
-        TableColumn<CelestialBodies, String> column5 = new TableColumn<>("Lowest temperature");
-        TableColumn<CelestialBodies, String> column6 = new TableColumn<>("Highest temperature");
-        TableColumn<CelestialBodies, String> column7 = new TableColumn<>("Oxygen percentage");
-        TableColumn<CelestialBodies, String> column8 = new TableColumn<>("Other gas percentage");
-        TableColumn<CelestialBodies, String> column9 = new TableColumn<>("Gravitational field height");
-        TableColumn<CelestialBodies, String> column10 = new TableColumn<>("Orbital speed");
+        TableColumn<CelestialBody, String> column1 = new TableColumn<>("Name");
+        TableColumn<CelestialBody, String> column2 = new TableColumn<>("Type");
+        TableColumn<CelestialBody, String> column3 = new TableColumn<>("Researched");
+        TableColumn<CelestialBody, String> column4 = new TableColumn<>("Mean distance from star");
+        TableColumn<CelestialBody, String> column5 = new TableColumn<>("Lowest temperature");
+        TableColumn<CelestialBody, String> column6 = new TableColumn<>("Highest temperature");
+        TableColumn<CelestialBody, String> column7 = new TableColumn<>("Oxygen percentage");
+        TableColumn<CelestialBody, String> column8 = new TableColumn<>("Other gas percentage");
+        TableColumn<CelestialBody, String> column9 = new TableColumn<>("Gravitational field height");
+        TableColumn<CelestialBody, String> column10 = new TableColumn<>("Orbital speed");
 
         column1.setCellValueFactory(new PropertyValueFactory<>("name"));
         column2.setCellValueFactory(new PropertyValueFactory<>("type"));
@@ -179,51 +177,51 @@ public class MainView extends Scene {
         this.filterBuldingsForThisCelestialButton = filterBuldingsForThisCelestialButton;
     }
 
-    public ObservableList<Journeys> getJourneysOL() {
+    public ObservableList<Journey> getJourneysOL() {
         return journeysOL;
     }
 
-    public void setJourneysOL(ObservableList<Journeys> journeysOL) {
+    public void setJourneysOL(ObservableList<Journey> journeysOL) {
         this.journeysOL = journeysOL;
     }
 
-    public ObservableList<ResidentialBuildings> getHousingOL() {
+    public ObservableList<ResidentialBuilding> getHousingOL() {
         return housingOL;
     }
 
-    public void setHousingOL(ObservableList<ResidentialBuildings> housingOL) {
+    public void setHousingOL(ObservableList<ResidentialBuilding> housingOL) {
         this.housingOL = housingOL;
     }
 
-    public ObservableList<CelestialBodies> getCelestialBodiesOL() {
+    public ObservableList<CelestialBody> getCelestialBodiesOL() {
         return celestialBodiesOL;
     }
 
-    public void setCelestialBodiesOL(ObservableList<CelestialBodies> celestialBodiesOL) {
+    public void setCelestialBodiesOL(ObservableList<CelestialBody> celestialBodiesOL) {
         this.celestialBodiesOL = celestialBodiesOL;
     }
 
-    public ListView<Journeys> getJourneysLV() {
+    public ListView<Journey> getJourneysLV() {
         return journeysLV;
     }
 
-    public void setJourneysLV(ListView<Journeys> journeysLV) {
+    public void setJourneysLV(ListView<Journey> journeysLV) {
         this.journeysLV = journeysLV;
     }
 
-    public ListView<ResidentialBuildings> getHousingLV() {
+    public ListView<ResidentialBuilding> getHousingLV() {
         return housingLV;
     }
 
-    public void setHousingLV(ListView<ResidentialBuildings> housingLV) {
+    public void setHousingLV(ListView<ResidentialBuilding> housingLV) {
         this.housingLV = housingLV;
     }
 
-    public TableView<CelestialBodies> getCelestialBodiesTV() {
+    public TableView<CelestialBody> getCelestialBodiesTV() {
         return celestialBodiesTV;
     }
 
-    public void setCelestialBodiesTV(TableView<CelestialBodies> celestialBodiesTV) {
+    public void setCelestialBodiesTV(TableView<CelestialBody> celestialBodiesTV) {
         this.celestialBodiesTV = celestialBodiesTV;
     }
 
@@ -235,35 +233,35 @@ public class MainView extends Scene {
         this.filterJourneysForThisCelestialButton = filterJourneysForThisCelestialButton;
     }
 
-    public ObservableList<Users> getAllUsersOL() {
+    public ObservableList<User> getAllUsersOL() {
         return allUsersOL;
     }
 
-    public void setAllUsersOL(ObservableList<Users> allUsersOL) {
+    public void setAllUsersOL(ObservableList<User> allUsersOL) {
         this.allUsersOL = allUsersOL;
     }
 
-    public ObservableList<Users> getPickedUsersOL() {
+    public ObservableList<User> getPickedUsersOL() {
         return pickedUsersOL;
     }
 
-    public void setPickedUsersOL(ObservableList<Users> pickedUsersOL) {
+    public void setPickedUsersOL(ObservableList<User> pickedUsersOL) {
         this.pickedUsersOL = pickedUsersOL;
     }
 
-    public ListView<Users> getAllUsersLV() {
+    public ListView<User> getAllUsersLV() {
         return allUsersLV;
     }
 
-    public void setAllUsersLV(ListView<Users> allUsersLV) {
+    public void setAllUsersLV(ListView<User> allUsersLV) {
         this.allUsersLV = allUsersLV;
     }
 
-    public ListView<Users> getPickedUsersLV() {
+    public ListView<User> getPickedUsersLV() {
         return pickedUsersLV;
     }
 
-    public void setPickedUsersLV(ListView<Users> pickedUsersLV) {
+    public void setPickedUsersLV(ListView<User> pickedUsersLV) {
         this.pickedUsersLV = pickedUsersLV;
     }
 }

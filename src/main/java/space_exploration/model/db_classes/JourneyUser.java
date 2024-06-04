@@ -7,13 +7,13 @@ import space_exploration.observer.ISubscriber;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JourneysUsers implements IPublisher {
+public class JourneyUser implements IPublisher {
     private List<ISubscriber> subscribers = new ArrayList<>();
 
     private int userId;
     private int journeyId;
 
-    public JourneysUsers(int userId, int journeyId) {
+    public JourneyUser(int userId, int journeyId) {
         this.userId = userId;
         this.journeyId = journeyId;
     }
@@ -40,7 +40,7 @@ public class JourneysUsers implements IPublisher {
 
     @Override
     public String toString() {
-        return "JourneysUsers{" +
+        return "JourneyUser{" +
                 "userId=" + userId +
                 ", journeyId=" + journeyId +
                 '}';

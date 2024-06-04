@@ -4,10 +4,9 @@ import space_exploration.Messages.MessageUpdate;
 import space_exploration.observer.IPublisher;
 import space_exploration.observer.ISubscriber;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-public class Users implements IPublisher {
+public class User implements IPublisher {
     private List<ISubscriber> subscribers = new ArrayList<>();
 
     private int id;
@@ -18,7 +17,7 @@ public class Users implements IPublisher {
     private String surname;
 
     /// TODO: dal da mu stavimo i planetu na kojo jtrenutno zivi? defaultno ce da bude earth, pa posle da menjamo
-    public Users(int id, String username, String password, String email, String name, String surname) {
+    public User(int id, String username, String password, String email, String name, String surname) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -92,7 +91,7 @@ public class Users implements IPublisher {
 
     @Override
     public String toString() {
-        return "Users{" +
+        return "User{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +

@@ -24,8 +24,8 @@ public class JDBCUtils {
         }
     }
 
-    public static List<CelestialBodies> selectAllFromCelestialBodies() {
-        List<CelestialBodies> bodies = new ArrayList<>();
+    public static List<CelestialBody> selectAllFromCelestialBodies() {
+        List<CelestialBody> bodies = new ArrayList<>();
         String query = "SELECT * FROM CelestialBodies";
         try {
             Statement statement = connection.createStatement();
@@ -44,8 +44,8 @@ public class JDBCUtils {
                 float gravitationalFieldHeight = resultSet.getFloat(10);
                 float orbitalSpeed = resultSet.getFloat(11);
 
-                // Creating CelestialBodies object and adding it to the list
-                CelestialBodies body = new CelestialBodies(id, name, type, researched, meanDistanceFromStar, lowestTemperature, highestTemperature, oxygenPercentage, otherGasPercentage, gravitationalFieldHeight, orbitalSpeed);
+                // Creating CelestialBody object and adding it to the list
+                CelestialBody body = new CelestialBody(id, name, type, researched, meanDistanceFromStar, lowestTemperature, highestTemperature, oxygenPercentage, otherGasPercentage, gravitationalFieldHeight, orbitalSpeed);
                 bodies.add(body);
             }
         } catch (SQLException e) {
@@ -53,10 +53,106 @@ public class JDBCUtils {
         }
         return bodies;
     }
+    public static Calendar selectFromCalendar() {
+        String query = "SELECT * FROM Calendar";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            if (resultSet.next()) {
+                Date date = resultSet.getDate(1);
+                Calendar today = new Calendar(date);
+                today.addSubscriber(Updater.getUpdater());
+                today.nextDay();
+                return today;
+            }
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 
+//    public static int countDeathsUnder40FromLastYear(CelestialBody celestialBody) {
+//        Calendar today = selectFromCalendar();
+//        if (today == null) {
+//            throw new RuntimeException("Unable to retrieve today's date from the Calendar table.");
+//        }
+//
+//        String countQuery = "SELECT COUNT(*) AS deaths_under_40 " +
+//                "FROM Deaths d " +
+//                "JOIN Users u ON d.user_id = u.id " +
+//                "JOIN CelestialBodies cb ON d.celestial_body_id = cb.id " +
+//                "WHERE cb.id = ? " +
+//                "AND d.age_at_death < 40 " +
+//                "AND d.death_date BETWEEN DATE_SUB(?, INTERVAL 1 YEAR) AND ?";
+//
+//        try (PreparedStatement statement = connection.prepareStatement(countQuery)) {
+//            statement.setInt(1, celestialBody.getId());
+//            statement.setDate(2, today.getToday());
+//            statement.setDate(3, today.getToday());
+//
+//            try (ResultSet resultSet = statement.executeQuery()) {
+//                if (resultSet.next()) {
+//                    return resultSet.getInt("deaths_under_40");
+//                }
+//            }
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        return 0;
+//    }
+    //TODO: CHECK OUR DATABASE FOR ERRORS
+public static List<CelestialBody> selectHabitableCelestialBodies() {
+    List<CelestialBody> habitableBodies = new ArrayList<>();
+    Calendar calendar = selectFromCalendar();
+    String query = "SELECT cb.* " +
+            "FROM CelestialBodies cb " +
+            "WHERE cb.mean_distance_from_star BETWEEN 100 AND 200 " +
+            "AND cb.lowest_temperature BETWEEN 150 AND 250 " +
+            "AND cb.highest_temperature BETWEEN 250 AND 350 " +
+            "AND (cb.highest_temperature - cb.lowest_temperature) <= 120 " +
+            "AND cb.oxygen_percentage BETWEEN 15 AND 25 " +
+            "AND (cb.oxygen_percentage + cb.other_gas_percentage) BETWEEN 90 AND 99 " +
+            "AND cb.gravitational_field_height >= 1000 " +
+            "AND cb.orbital_speed BETWEEN 25 AND 35 " +
+            "AND (SELECT COUNT(*) FROM Deaths d " +
+            "WHERE d.celestial_body_id = cb.id " +
+            "AND d.age_at_death < 40 " +
+            "AND d.death_date BETWEEN DATE_SUB(?, INTERVAL 1 YEAR) AND ?) <= 20";
 
-    public static List<Missions> selectAllFromMissions() {
-        List<Missions> missionsList = new ArrayList<>();
+    try (PreparedStatement statement = connection.prepareStatement(query)) {
+        statement.setDate(1, calendar.getToday());
+        statement.setDate(2, calendar.getToday());
+
+        try (ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                String type = resultSet.getString("type");
+                boolean researched = resultSet.getBoolean("researched");
+                float meanDistanceFromStar = resultSet.getFloat("mean_distance_from_star");
+                float lowestTemperature = resultSet.getFloat("lowest_temperature");
+                float highestTemperature = resultSet.getFloat("highest_temperature");
+                float oxygenPercentage = resultSet.getFloat("oxygen_percentage");
+                float otherGasPercentage = resultSet.getFloat("other_gas_percentage");
+                float gravitationalFieldHeight = resultSet.getFloat("gravitational_field_height");
+                float orbitalSpeed = resultSet.getFloat("orbital_speed");
+
+                CelestialBody celestialBody = new CelestialBody(id, name, type, researched, meanDistanceFromStar,
+                        lowestTemperature, highestTemperature, oxygenPercentage, otherGasPercentage,
+                        gravitationalFieldHeight, orbitalSpeed);
+                habitableBodies.add(celestialBody);
+            }
+        }
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
+    }
+
+    return habitableBodies;
+}
+
+    public static List<Mission> selectAllFromMissions() {
+        List<Mission> missionsList = new ArrayList<>();
         String query = "SELECT * FROM Missions";
         try {
             Statement statement = connection.createStatement();
@@ -67,7 +163,7 @@ public class JDBCUtils {
                 Date startDate = resultSet.getDate(3);
                 Date endDate = resultSet.getDate(4);
 
-                Missions mission = new Missions(id, celestialBodyId, startDate, endDate);
+                Mission mission = new Mission(id, celestialBodyId, startDate, endDate);
                 missionsList.add(mission);
             }
         } catch (SQLException e) {
@@ -75,8 +171,8 @@ public class JDBCUtils {
         }
         return missionsList;
     }
-    public static List<Journeys> selectAllFromJourneys() {
-        List<Journeys> journeysList = new ArrayList<>();
+    public static List<Journey> selectAllFromJourneys() {
+        List<Journey> journeysList = new ArrayList<>();
         String query = "SELECT * FROM Journeys";
         try {
             Statement statement = connection.createStatement();
@@ -88,7 +184,7 @@ public class JDBCUtils {
                 Timestamp departureDate = resultSet.getTimestamp(4);
                 Timestamp arrivalDate = resultSet.getTimestamp(5);
 
-                Journeys journey = new Journeys(id, destinationBodyId, vehicleCode, departureDate, arrivalDate);
+                Journey journey = new Journey(id, destinationBodyId, vehicleCode, departureDate, arrivalDate);
                 journeysList.add(journey);
             }
         } catch (SQLException e) {
@@ -97,30 +193,34 @@ public class JDBCUtils {
         return journeysList;
     }
 
-    // TODO: Vrati samo listu journeya za planetu koja je prosledjena ovoj funkciji, WHERE upit
-    public static List<Journeys> getJourneysOnlyForThisCelestial(CelestialBodies celestialBodies) {
-        List<Journeys> journeysList = new ArrayList<>();
-        String query = "SELECT * FROM Journeys WHERE celestialBodies = celestial_body_id";          // TODO: napravi ovaj upit..
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                int id = resultSet.getInt(1);
-                int destinationBodyId = resultSet.getInt(2);
-                String vehicleCode = resultSet.getString(3);
-                Timestamp departureDate = resultSet.getTimestamp(4);
-                Timestamp arrivalDate = resultSet.getTimestamp(5);
+    public static List<Journey> getJourneysOnlyForThisCelestial(CelestialBody celestialBody) {
+        List<Journey> journeysList = new ArrayList<>();
+        String query = "SELECT * FROM Journeys WHERE destination_body_id = ?";
 
-                Journeys journey = new Journeys(id, destinationBodyId, vehicleCode, departureDate, arrivalDate);
-                journeysList.add(journey);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, celestialBody.getId());
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    int destinationBodyId = resultSet.getInt("destination_body_id");
+                    String vehicleCode = resultSet.getString("vehicle_code");
+                    Timestamp departureDate = resultSet.getTimestamp("departure_date");
+                    Timestamp arrivalDate = resultSet.getTimestamp("arrival_date");
+
+                    Journey journey = new Journey(id, destinationBodyId, vehicleCode, departureDate, arrivalDate);
+                    journeysList.add(journey);
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
         return journeysList;
     }
-    public static List<Users> selectAllFromUsers() {
-        List<Users> usersList = new ArrayList<>();
+
+    public static List<User> selectAllFromUsers() {
+        List<User> usersList = new ArrayList<>();
         String query = "SELECT * FROM Users";
         try {
             Statement statement = connection.createStatement();
@@ -133,7 +233,7 @@ public class JDBCUtils {
                 String name = resultSet.getString(5);
                 String surname = resultSet.getString(6);
 
-                Users user = new Users(id, username, password, email, name, surname);
+                User user = new User(id, username, password, email, name, surname);
                 usersList.add(user);
             }
         } catch (SQLException e) {
@@ -141,8 +241,8 @@ public class JDBCUtils {
         }
         return usersList;
     }
-    public static List<JourneysUsers> selectAllFromJourneysUsers() {
-        List<JourneysUsers> journeysUsersList = new ArrayList<>();
+    public static List<JourneyUser> selectAllFromJourneysUsers() {
+        List<JourneyUser> journeysUsersList = new ArrayList<>();
         String query = "SELECT * FROM JourneysUsers";
         try {
             Statement statement = connection.createStatement();
@@ -151,7 +251,7 @@ public class JDBCUtils {
                 int userId = resultSet.getInt(1);
                 int journeyId = resultSet.getInt(2);
 
-                JourneysUsers journeysUser = new JourneysUsers(userId, journeyId);
+                JourneyUser journeysUser = new JourneyUser(userId, journeyId);
                 journeysUsersList.add(journeysUser);
             }
         } catch (SQLException e) {
@@ -159,8 +259,8 @@ public class JDBCUtils {
         }
         return journeysUsersList;
     }
-    public static List<ResidentialBuildings> selectAllFromResidentialBuildings() {
-        List<ResidentialBuildings> buildingsList = new ArrayList<>();
+    public static List<ResidentialBuilding> selectAllFromResidentialBuildings() {
+        List<ResidentialBuilding> buildingsList = new ArrayList<>();
         String query = "SELECT * FROM ResidentialBuildings";
         try {
             Statement statement = connection.createStatement();
@@ -172,7 +272,7 @@ public class JDBCUtils {
                 int capacity = resultSet.getInt(4);
                 Date buildDate = resultSet.getDate(5);
 
-                ResidentialBuildings building = new ResidentialBuildings(id, name, celestialBodyId, capacity, buildDate);
+                ResidentialBuilding building = new ResidentialBuilding(id, name, celestialBodyId, capacity, buildDate);
                 buildingsList.add(building);
             }
         } catch (SQLException e) {
@@ -181,32 +281,38 @@ public class JDBCUtils {
         return buildingsList;
     }
 
-    // TODO: probaj da sredis ovaj query, NE RADI (Treba da uzme listu svih residential builgsa, ali samo da prosledjenu planetu)
-    public static List<ResidentialBuildings> getResidentialBuildingsForThisPlanet(CelestialBodies celestialBodies) {
-        List<ResidentialBuildings> buildingsList = new ArrayList<>();
-        String query = "SELECT * FROM ResidentialBuildings WHERE celestialBodies = celestial_body_id";        // TODO: ovaj WHERE kako da namestimo,. treba id da gleda?
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                int id = resultSet.getInt(1);
-                String name = resultSet.getString(2);
-                int celestialBodyId = resultSet.getInt(3);
-                int capacity = resultSet.getInt(4);
-                Date buildDate = resultSet.getDate(5);
+    public static List<ResidentialBuilding> getResidentialBuildingsForThisPlanet(CelestialBody celestialBody) {
+        List<ResidentialBuilding> buildingsList = new ArrayList<>();
 
-                ResidentialBuildings building = new ResidentialBuildings(id, name, celestialBodyId, capacity, buildDate);
-                buildingsList.add(building);
+        String query = "SELECT * FROM ResidentialBuildings WHERE celestial_body_id = ?"; // Fixed query
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, celestialBody.getId()); // Assuming celestialBody has a getId() method
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    String name = resultSet.getString("name");
+                    int celestialBodyId = resultSet.getInt("celestial_body_id");
+                    int capacity = resultSet.getInt("capacity");
+                    Date buildDate = resultSet.getDate("build_date");
+
+                    ResidentialBuilding building = new ResidentialBuilding(id, name, celestialBodyId, capacity, buildDate);
+                    building.addSubscriber(Updater.getUpdater());
+                    buildingsList.add(building);
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
         return buildingsList;
     }
 
 
-    public static List<HousingPurchases> selectAllFromHousingPurchases() {
-        List<HousingPurchases> purchasesList = new ArrayList<>();
+
+    public static List<HousingPurchase> selectAllFromHousingPurchases() {
+        List<HousingPurchase> purchasesList = new ArrayList<>();
         String query = "SELECT * FROM HousingPurchases";
         try {
             Statement statement = connection.createStatement();
@@ -217,7 +323,7 @@ public class JDBCUtils {
                 int buildingId = resultSet.getInt(3);
                 Date purchaseDate = resultSet.getDate(4);
 
-                HousingPurchases purchase = new HousingPurchases(id, userId, buildingId, purchaseDate);
+                HousingPurchase purchase = new HousingPurchase(id, userId, buildingId, purchaseDate);
                 purchasesList.add(purchase);
             }
         } catch (SQLException e) {
@@ -225,8 +331,8 @@ public class JDBCUtils {
         }
         return purchasesList;
     }
-    public static List<Deaths> selectAllFromDeaths() {
-        List<Deaths> deathsList = new ArrayList<>();
+    public static List<Death> selectAllFromDeaths() {
+        List<Death> deathsList = new ArrayList<>();
         String query = "SELECT * FROM Deaths";
         try {
             Statement statement = connection.createStatement();
@@ -238,7 +344,7 @@ public class JDBCUtils {
                 Date deathDate = resultSet.getDate(4);
                 int ageAtDeath = resultSet.getInt(5);
 
-                Deaths death = new Deaths(id, celestialBodyId, userId, deathDate, ageAtDeath);
+                Death death = new Death(id, celestialBodyId, userId, deathDate, ageAtDeath);
                 deathsList.add(death);
             }
         } catch (SQLException e) {
@@ -654,6 +760,20 @@ public static void updateDeaths(int id, int celestialBodyId, int userId, Date de
             throw new RuntimeException(e);
         }
     }
+    public static void updateCalendar(Calendar calendar){
+        String query = "UPDATE Calendar SET today=? WHERE today=?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            connection.setAutoCommit(false);
+            statement.setDate(1,calendar.getToday());
+            statement.setDate(2,Date.valueOf(calendar.getToday().toLocalDate().minusDays(1)));
+            statement.executeUpdate();
+            connection.commit();
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static void updateHousingPurchases(int id, int userId, int buildingId, Date purchaseDate) {
         String query = "UPDATE HousingPurchases SET user_id=?, building_id=?, purchase_date=? WHERE id=?";
@@ -685,6 +805,35 @@ public static void updateDeaths(int id, int celestialBodyId, int userId, Date de
         }
         return false;
     }
+    public static List<User> selectAvailableUsers() {
+        List<User> singleUsers = new ArrayList<>();
+        String query = "SELECT * " +
+                "FROM Users u " +
+                "LEFT JOIN Deaths d ON u.id = d.user_id " +
+                "LEFT JOIN HousingPurchases hp ON u.id = hp.user_id " +
+                "WHERE d.id IS NULL AND hp.id IS NULL";
+
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                String username = resultSet.getString(2);
+                String password = resultSet.getString(3);
+                String email = resultSet.getString(4);
+                String name = resultSet.getString(5);
+                String surname = resultSet.getString(6);
+
+                User user = new User(id, username, password, email, name, surname);
+                singleUsers.add(user);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return singleUsers;
+    }
+
     private JDBCUtils() {
     }
     private static void showAlert(String title, String content) {

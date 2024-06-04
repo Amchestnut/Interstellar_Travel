@@ -8,7 +8,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Deaths implements IPublisher {
+public class Death implements IPublisher {
     private List<ISubscriber> subscribers = new ArrayList<>();
 
     private int id;
@@ -17,7 +17,7 @@ public class Deaths implements IPublisher {
     private Date deathDate;
     private int ageAtDeath;
 
-    public Deaths(int id, int celestialBodyId, int userId, Date deathDate, int ageAtDeath) {
+    public Death(int id, int celestialBodyId, int userId, Date deathDate, int ageAtDeath) {
         this.id = id;
         this.celestialBodyId = celestialBodyId;
         this.userId = userId;
@@ -77,7 +77,7 @@ public class Deaths implements IPublisher {
 
     @Override
     public String toString() {
-        return "Deaths{" +
+        return "Death{" +
                 "id=" + id +
                 ", celestialBodyId=" + celestialBodyId +
                 ", userId=" + userId +

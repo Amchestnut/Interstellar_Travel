@@ -4,11 +4,10 @@ import space_exploration.Messages.MessageUpdate;
 import space_exploration.observer.IPublisher;
 import space_exploration.observer.ISubscriber;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CelestialBodies implements IPublisher {
+public class CelestialBody implements IPublisher {
     private List<ISubscriber> subscribers = new ArrayList<>();
     private int id;
     private String name;
@@ -22,7 +21,7 @@ public class CelestialBodies implements IPublisher {
     private float gravitationalFieldHeight;
     private float orbitalSpeed;
 
-    public CelestialBodies( int id, String name, String type, boolean researched, float meanDistanceFromStar, float lowestTemperature, float highestTemperature, float oxygenPercentage, float otherGasPercentage, float gravitationalFieldHeight, float orbitalSpeed) {
+    public CelestialBody(int id, String name, String type, boolean researched, float meanDistanceFromStar, float lowestTemperature, float highestTemperature, float oxygenPercentage, float otherGasPercentage, float gravitationalFieldHeight, float orbitalSpeed) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -150,7 +149,7 @@ public class CelestialBodies implements IPublisher {
 
     @Override
     public String toString() {
-        return "CelestialBodies{" +
+        return "CelestialBody{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
