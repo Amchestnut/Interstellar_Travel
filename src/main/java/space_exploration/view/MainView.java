@@ -2,46 +2,50 @@ package space_exploration.view;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import space_exploration.controller.AddControl;
-import space_exploration.controller.FilterControl;
-import space_exploration.model.Person;
+import space_exploration.controller.FilterBuildingForThisCelestial;
+import space_exploration.controller.FilterJourneysForThisCelestial;
+import space_exploration.controller.PickPersonAction;
 import space_exploration.model.base.Server;
 import space_exploration.model.db_classes.CelestialBodies;
-import space_exploration.model.db_classes.HousingPurchases;
 import space_exploration.model.db_classes.Journeys;
 import space_exploration.model.db_classes.ResidentialBuildings;
+import space_exploration.model.db_classes.Users;
 
-import java.time.LocalDate;
 
 public class MainView extends Scene {
 
     private BorderPane root;
-    private Label controlPanel;
+    private Label controlPanelLB;
+    private Label pickAnyPlanetYouWantLB;
+    private Label allAvailablePeopleLB;
+    private Label allPickedPeopleLB;
     private Button pickPersonButton;
-    private Button pickPlanetButton;
-    private Button filterButton;
+    private Button pickPlanetButton;        /// I THINK ITS REDUNDENT
+    private Button filterBuldingsForThisCelestialButton;
+    private Button filterJourneysForThisCelestialButton;
 
     private ObservableList<Journeys> journeysOL;
     private ObservableList<ResidentialBuildings> housingOL;
+    private ObservableList<Users> allUsersOL;
+    private ObservableList<Users> pickedUsersOL;
     private ObservableList<CelestialBodies> celestialBodiesOL;
 
-    private ListView<Journeys> journeysLV;
+    private ListView<Journeys> journeysLV;      /// trains for all planets!!! We shows them all, but also add a filter button so it shows only trains for the picked CELESTIAL, and user can be able to pick any spacecraft and go interstellar
     private ListView<ResidentialBuildings> housingLV;
+    private ListView<Users> allUsersLV;
+    private ListView<Users> pickedUsersLV;
 
     private TableView<CelestialBodies> celestialBodiesTV;
 
     public MainView() {
-        super(new BorderPane(), 1200, 900);
+        super(new BorderPane(), 1300, 1000);
         this.root = (BorderPane) this.getRoot();
 
         initialisation();
@@ -50,20 +54,31 @@ public class MainView extends Scene {
     }
 
     private void initialisation(){
-        filterButton = new Button("Filter something");        /// maybe add money per resident ??? So they have money to buy
+        filterJourneysForThisCelestialButton = new Button("Filter me only journeys for the picked planet");
+        filterBuldingsForThisCelestialButton = new Button("Filter homes for the picked planet");        /// maybe add money per resident ??? So they have money to buy
         pickPersonButton= new Button("Pick this person");               ///
         pickPlanetButton = new Button("Pick this planet");
 
-        controlPanel = new Label("Control panel...");
+        controlPanelLB = new Label("Control panel...");
+        pickAnyPlanetYouWantLB = new Label("Pick any planet or satellite you want to move on. Every one of them is habitable (for now ;))");
+        allAvailablePeopleLB = new Label("List of every person available to travel with you");
+        allPickedPeopleLB = new Label("List of every person you have picked to go on interstellar journey with you");
 
         journeysOL = FXCollections.observableArrayList(Server.SERVER.getJourneys());
         housingOL = FXCollections.observableArrayList(Server.SERVER.getResidentialBuildings());
         /// here i want to check if the celestial body is habitale or not with a QUERY to database, saying WHERE AND SATYSFYING all the criteria for a celestial body to be habitable
-        /// gpt gpt gpt gpt gpt
+
+        /// TODO: treba fixovati ovaj allUsersOL da ne daje bas sve usere, nego samo one koji mogu u tom trenutku da putuju (vidi todo ispod)
+        allUsersOL = FXCollections.observableArrayList(Server.SERVER.getUsers());     // TODO: Query koji ce da izvuce sve usere koji su slobodni (koji nisu mrtvi, i koji se jos nisu nigde naselili (ali jesu registrovani)
+        /// TODO: da li staviti trenutnog logovanog usera u pickovane usere??
+        pickedUsersOL = FXCollections.observableArrayList();                          // TODO: na pocetku prazno, a posle prilikom clicka na button, dodacemo usera jednog po jednog u listu izabranih za putovanje
+
         celestialBodiesOL = FXCollections.observableArrayList(Server.SERVER.getCelestialBodies());
 
         journeysLV = new ListView<>(journeysOL);
         housingLV = new ListView<>(housingOL);                                   //   journeysLV.setItems(FXCollections.observableArrayList("Mission 1", "Mission 2", "Mission 3"));
+        allUsersLV = new ListView<>(allUsersOL);
+        pickedUsersLV = new ListView<>(pickedUsersOL);
 
         celestialBodiesTV = new TableView<>(celestialBodiesOL);
 
@@ -98,54 +113,159 @@ public class MainView extends Scene {
         // Organize layout
         VBox leftVBox = new VBox(10, journeysLV);
         VBox rightVBox = new VBox(10, housingLV);
-        VBox centerVBox = new VBox(10, controlPanel, pickPlanetButton, pickPersonButton, filterButton);
+        VBox centerVBox = new VBox(10, controlPanelLB, filterJourneysForThisCelestialButton, pickPlanetButton, pickPersonButton, filterBuldingsForThisCelestialButton);
         centerVBox.setAlignment(Pos.CENTER);
+        allUsersLV.setMaxHeight(150);
+        pickedUsersLV.setMaxHeight(150);
+        VBox lastRightVbox = new VBox(10, allAvailablePeopleLB, allUsersLV, pickPersonButton, allPickedPeopleLB, pickedUsersLV);
 
-        HBox topHBox = new HBox(50, leftVBox, centerVBox, rightVBox); // Increase spacing for better visual separation
+        HBox topHBox = new HBox(50, leftVBox, centerVBox, rightVBox, lastRightVbox); // Increase spacing for better visual separation
 
         // Position elements in BorderPane
         root.setTop(topHBox);
-        root.setCenter(celestialBodiesTV);  // Ensuring TableView is added
+
+        VBox bottomVbox = new VBox(10, pickAnyPlanetYouWantLB, celestialBodiesTV);
+        bottomVbox.setAlignment(Pos.CENTER);
+        root.setCenter(bottomVbox);  // Ensuring TableView is added
     }
-
-    /*   (OLD POSITIONING, it sucks a bit)
-    private void positioning() {
-        VBox topsideLeft = new VBox(10);
-        VBox middleVBox = new VBox(10);
-        VBox topsideRight = new VBox(10);
-        VBox bottomTabel = new VBox(10);
-        HBox topHBox = new HBox(10);
-
-
-        topsideLeft.setSpacing(20);
-        topsideLeft.getChildren().addAll(journeysLV);
-
-        topsideRight.setSpacing(20);
-        topsideRight.getChildren().addAll(housingLV);
-
-        middleVBox.getChildren().addAll(controlPanel, pickPlanetButton, pickPersonButton, filterButton);
-        middleVBox.setStyle("-fx-alignment: center");
-        middleVBox.setAlignment(Pos.CENTER);
-
-        topHBox.getChildren().addAll(topsideLeft, middleVBox, topsideRight);
-        topHBox.setSpacing(50); // Spacing between the ListViews
-
-       // bottomTabel.getChildren().addAll(celestialBodiesTV);
-
-        // Assembling the layout
-        root.setTop(topHBox);
-//        root.setCenter();
-        root.setBottom(bottomTabel);
-    }
-     */
 
     private void actions() {
 //        pickPlanetButton.setOnAction(new PickPlanetAction(this));      /// this je view
 //        pickPersonButton.setOnAction(new PickPersonAction(this));
 //        filterButton.setOnAction(new FilterSomething(this));
-        // komentar
+        filterBuldingsForThisCelestialButton.setOnAction(new FilterBuildingForThisCelestial(this));
+        filterJourneysForThisCelestialButton.setOnAction(new FilterJourneysForThisCelestial(this));
+        pickPersonButton.setOnAction(new PickPersonAction(this));
     }
 
+
+    public Label getControlPanelLB() {
+        return controlPanelLB;
+    }
+
+    public void setControlPanelLB(Label controlPanelLB) {
+        this.controlPanelLB = controlPanelLB;
+    }
+
+    public Label getPickAnyPlanetYouWantLB() {
+        return pickAnyPlanetYouWantLB;
+    }
+
+    public void setPickAnyPlanetYouWantLB(Label pickAnyPlanetYouWantLB) {
+        this.pickAnyPlanetYouWantLB = pickAnyPlanetYouWantLB;
+    }
+
+    public Button getPickPersonButton() {
+        return pickPersonButton;
+    }
+
+    public void setPickPersonButton(Button pickPersonButton) {
+        this.pickPersonButton = pickPersonButton;
+    }
+
+    public Button getPickPlanetButton() {
+        return pickPlanetButton;
+    }
+
+    public void setPickPlanetButton(Button pickPlanetButton) {
+        this.pickPlanetButton = pickPlanetButton;
+    }
+
+    public Button getFilterBuldingsForThisCelestialButton() {
+        return filterBuldingsForThisCelestialButton;
+    }
+
+    public void setFilterBuldingsForThisCelestialButton(Button filterBuldingsForThisCelestialButton) {
+        this.filterBuldingsForThisCelestialButton = filterBuldingsForThisCelestialButton;
+    }
+
+    public ObservableList<Journeys> getJourneysOL() {
+        return journeysOL;
+    }
+
+    public void setJourneysOL(ObservableList<Journeys> journeysOL) {
+        this.journeysOL = journeysOL;
+    }
+
+    public ObservableList<ResidentialBuildings> getHousingOL() {
+        return housingOL;
+    }
+
+    public void setHousingOL(ObservableList<ResidentialBuildings> housingOL) {
+        this.housingOL = housingOL;
+    }
+
+    public ObservableList<CelestialBodies> getCelestialBodiesOL() {
+        return celestialBodiesOL;
+    }
+
+    public void setCelestialBodiesOL(ObservableList<CelestialBodies> celestialBodiesOL) {
+        this.celestialBodiesOL = celestialBodiesOL;
+    }
+
+    public ListView<Journeys> getJourneysLV() {
+        return journeysLV;
+    }
+
+    public void setJourneysLV(ListView<Journeys> journeysLV) {
+        this.journeysLV = journeysLV;
+    }
+
+    public ListView<ResidentialBuildings> getHousingLV() {
+        return housingLV;
+    }
+
+    public void setHousingLV(ListView<ResidentialBuildings> housingLV) {
+        this.housingLV = housingLV;
+    }
+
+    public TableView<CelestialBodies> getCelestialBodiesTV() {
+        return celestialBodiesTV;
+    }
+
+    public void setCelestialBodiesTV(TableView<CelestialBodies> celestialBodiesTV) {
+        this.celestialBodiesTV = celestialBodiesTV;
+    }
+
+    public Button getFilterJourneysForThisCelestialButton() {
+        return filterJourneysForThisCelestialButton;
+    }
+
+    public void setFilterJourneysForThisCelestialButton(Button filterJourneysForThisCelestialButton) {
+        this.filterJourneysForThisCelestialButton = filterJourneysForThisCelestialButton;
+    }
+
+    public ObservableList<Users> getAllUsersOL() {
+        return allUsersOL;
+    }
+
+    public void setAllUsersOL(ObservableList<Users> allUsersOL) {
+        this.allUsersOL = allUsersOL;
+    }
+
+    public ObservableList<Users> getPickedUsersOL() {
+        return pickedUsersOL;
+    }
+
+    public void setPickedUsersOL(ObservableList<Users> pickedUsersOL) {
+        this.pickedUsersOL = pickedUsersOL;
+    }
+
+    public ListView<Users> getAllUsersLV() {
+        return allUsersLV;
+    }
+
+    public void setAllUsersLV(ListView<Users> allUsersLV) {
+        this.allUsersLV = allUsersLV;
+    }
+
+    public ListView<Users> getPickedUsersLV() {
+        return pickedUsersLV;
+    }
+
+    public void setPickedUsersLV(ListView<Users> pickedUsersLV) {
+        this.pickedUsersLV = pickedUsersLV;
+    }
 }
 
 
@@ -159,29 +279,3 @@ public class MainView extends Scene {
 
 
 
-
-
-/*
-private HBox filterBox() {
-        HBox hbox = new HBox(10, new Label("First name:"), this.tfFirstNameFilter,
-                                new Label("Last name:"), this.tfLastNameFilter,
-                                new Label("Year:"), this.tfYearFilter,
-                                this.btFilter);
-        hbox.setPadding(new Insets(10));
-        hbox.setAlignment(Pos.CENTER);
-        return hbox;
-    }
-
-    private GridPane addBox() {
-        GridPane gridPane = new GridPane();
-        gridPane.addRow(0, new Label("First name:"), this.tfFirstName);
-        gridPane.addRow(1, new Label("Last name:"), this.tfLastName);
-        gridPane.addRow(2, new Label("Date of birth:"), this.dpDateOfBirth);
-        gridPane.add(this.btAdd, 1, 3);
-        gridPane.setVgap(10);
-        gridPane.setHgap(10);
-        gridPane.setPadding(new Insets(10));
-        gridPane.setAlignment(Pos.CENTER);
-        return gridPane;
-    }
- */

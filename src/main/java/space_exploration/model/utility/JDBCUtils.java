@@ -96,6 +96,29 @@ public class JDBCUtils {
         }
         return journeysList;
     }
+
+    // TODO: Vrati samo listu journeya za planetu koja je prosledjena ovoj funkciji, WHERE upit
+    public static List<Journeys> getJourneysOnlyForThisCelestial(CelestialBodies celestialBodies) {
+        List<Journeys> journeysList = new ArrayList<>();
+        String query = "SELECT * FROM Journeys WHERE celestialBodies = celestial_body_id";          // TODO: napravi ovaj upit..
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                int destinationBodyId = resultSet.getInt(2);
+                String vehicleCode = resultSet.getString(3);
+                Timestamp departureDate = resultSet.getTimestamp(4);
+                Timestamp arrivalDate = resultSet.getTimestamp(5);
+
+                Journeys journey = new Journeys(id, destinationBodyId, vehicleCode, departureDate, arrivalDate);
+                journeysList.add(journey);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return journeysList;
+    }
     public static List<Users> selectAllFromUsers() {
         List<Users> usersList = new ArrayList<>();
         String query = "SELECT * FROM Users";
@@ -157,6 +180,31 @@ public class JDBCUtils {
         }
         return buildingsList;
     }
+
+    // TODO: probaj da sredis ovaj query, NE RADI (Treba da uzme listu svih residential builgsa, ali samo da prosledjenu planetu)
+    public static List<ResidentialBuildings> getResidentialBuildingsForThisPlanet(CelestialBodies celestialBodies) {
+        List<ResidentialBuildings> buildingsList = new ArrayList<>();
+        String query = "SELECT * FROM ResidentialBuildings WHERE celestialBodies = celestial_body_id";        // TODO: ovaj WHERE kako da namestimo,. treba id da gleda?
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                String name = resultSet.getString(2);
+                int celestialBodyId = resultSet.getInt(3);
+                int capacity = resultSet.getInt(4);
+                Date buildDate = resultSet.getDate(5);
+
+                ResidentialBuildings building = new ResidentialBuildings(id, name, celestialBodyId, capacity, buildDate);
+                buildingsList.add(building);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return buildingsList;
+    }
+
+
     public static List<HousingPurchases> selectAllFromHousingPurchases() {
         List<HousingPurchases> purchasesList = new ArrayList<>();
         String query = "SELECT * FROM HousingPurchases";

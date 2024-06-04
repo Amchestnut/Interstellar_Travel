@@ -17,6 +17,7 @@ public class Users implements IPublisher {
     private String name;
     private String surname;
 
+    /// TODO: dal da mu stavimo i planetu na kojo jtrenutno zivi? defaultno ce da bude earth, pa posle da menjamo
     public Users(int id, String username, String password, String email, String name, String surname) {
         this.id = id;
         this.username = username;

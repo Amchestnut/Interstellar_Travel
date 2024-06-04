@@ -80,3 +80,16 @@ VALUES
     (3, 6, '2101-01-17'), -- Samuel Brown at Colony Zeta
     (4, 6, '2101-02-20'); -- Lily Evans at Colony Zeta
 
+
+INSERT INTO Journeys (destination_body_id, vehicle_code, departure_date, arrival_date)
+VALUES
+(18, 'XCV-777', '2124-08-01 10:00:00', '2124-10-01 12:00:00'),  -- Nova Terra (2 month travel)
+(19, 'YZT-123', '2125-05-08 15:00:00', '2125-08-08 18:00:00'),  -- Aurora Prime (3 month travel)
+(20, 'XCV-777', '2126-08-15 12:30:00', '2126-12-15 15:00:00'),  -- Caelus (4 month travel)
+(21, 'YZT-123', '2127-06-22 09:00:00', '2127-09-15 11:00:00'),  -- Seraphine (2.5 month travel)
+(22, 'XCV-777', '2128-02-09 18:00:00', '2128-05-25 14:00:00'),  -- Blue Haven (3.5 month travel)
+(23, 'ZZT-999', '2129-04-12 07:00:00', '2129-09-12 10:00:00'),  -- Gallifrey (5 month travel)
+(24, 'XCV-777', '2130-01-18 16:00:00', '2130-08-18 09:00:00'),  -- Arrakis (7 month travel)
+(25, 'YZT-123', '2131-10-26 05:00:00', '2132-04-26 12:00:00'),  -- Cybertron (6 month travel)
+(26, 'XCV-777', '2132-07-04 20:00:00', '2132-11-20 17:00:00'),  -- Matejina Utopija (4.5 month travel)
+(27, 'YZT-123', '2133-03-15 08:00:00', '2133-05-01 15:00:00');  -- Zion (1.5 month travel)

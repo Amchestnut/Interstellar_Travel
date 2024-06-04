@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import space_exploration.ApplicationFramework;
+import space_exploration.model.db_classes.CelestialBodies;
 import space_exploration.model.utility.JDBCUtils;
 import space_exploration.view.RegistrationView;
 import java.sql.*;
@@ -13,6 +14,7 @@ import java.util.Random;
 public class RegistrationAction implements EventHandler<ActionEvent> {
     private RegistrationView registrationView;
 
+
     public RegistrationAction(RegistrationView registrationView) {
         this.registrationView = registrationView;
     }
@@ -21,7 +23,7 @@ public class RegistrationAction implements EventHandler<ActionEvent> {
     public void handle(ActionEvent actionEvent) {
         if(validateInput()){
             String username = registrationView.getUsernameTF().getText();
-            String password = registrationView.getPasswordTF().getText(); // Consider hashing this in a real application
+            String password = registrationView.getPasswordTF().getText();
             String email = registrationView.getEmailTF().getText();
             String name = registrationView.getNameTF().getText();
             String surname = registrationView.getSurnameTF().getText();
