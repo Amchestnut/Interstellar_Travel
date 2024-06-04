@@ -21,7 +21,10 @@ public class Server {
     private final List<ResidentialBuilding> residentialBuildings = new ArrayList<>();
     private final List<HousingPurchase> housingPurchases = new ArrayList<>();
     private final List<Death> deaths = new ArrayList<>();
-    private final List<User> avaiableUsers = new ArrayList<>();
+    private final List<User> availableUsers = new ArrayList<>();
+    
+    private final List<ResidentialBuilding> availableBuildings = new ArrayList<>();
+    private final List<User> aliveUsers = new ArrayList<>();
     private Calendar today;
 
     private Server() {
@@ -33,18 +36,39 @@ public class Server {
         this.setJourneysUsers(JDBCUtils.selectAllFromJourneysUsers());
         this.setResidentialBuildings(JDBCUtils.selectAllFromResidentialBuildings());
         this.setHousingPurchases(JDBCUtils.selectAllFromHousingPurchases());
-        this.setDeaths(JDBCUtils.selectAllFromDeaths());
-        this.setToday(JDBCUtils.selectFromCalendar());
-        this.setAvaiableUsers(JDBCUtils.selectAvailableUsers());
+        this.setAvailableUsers(JDBCUtils.selectAvailableUsers());
         this.setHabitableCelestialBodies(JDBCUtils.selectHabitableCelestialBodies());
+        this.setAliveUsers(JDBCUtils.selectAliveUsers());
+        this.setToday(JDBCUtils.selectFromCalendar());
+        this.setDeaths(JDBCUtils.selectAllFromDeaths());
+        this.setAvailableBuildings(JDBCUtils.selectAllAvailableFromResidentialBuildings());
     }
 
-    public List<User> getAvaiableUsers() {
-        return avaiableUsers;
+    public List<User> getAvailableUsers() {
+        return availableUsers;
     }
-    private void setAvaiableUsers(List<User> avaiableUsers) {
-        this.avaiableUsers.clear();
-        this.avaiableUsers.addAll(avaiableUsers);
+
+    public List<ResidentialBuilding> getAvailableBuildings() {
+        return availableBuildings;
+    }
+
+
+
+    public List<User> getAliveUsers() {
+        return aliveUsers;
+    }
+    public void setAliveUsers(List<User> aliveUsers) {
+        this.aliveUsers.clear();
+        this.aliveUsers.addAll(aliveUsers);
+    }
+
+    public void setAvailableBuildings(List<ResidentialBuilding> residentialBuildings) {
+        this.availableBuildings.clear();
+        this.availableBuildings.addAll(residentialBuildings);
+    }
+    public void setAvailableUsers(List<User> availableUsers) {
+        this.availableUsers.clear();
+        this.availableUsers.addAll(availableUsers);
     }
 
     public Calendar getToday() {
@@ -52,6 +76,7 @@ public class Server {
     }
 
     private void setToday(Calendar today) {
+        today.nextDay();
         this.today = today;
     }
 
@@ -143,5 +168,9 @@ public class Server {
         this.deaths.clear();
         this.deaths.addAll(deaths);
     }
+//    public void updateDeaths(){
+//        this.deaths.clear();
+//        this.deaths.addAll(JDBCUtils.selectAllFromDeaths());
+//    }
 
 }

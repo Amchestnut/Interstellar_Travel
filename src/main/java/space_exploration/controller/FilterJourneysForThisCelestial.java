@@ -1,5 +1,6 @@
 package space_exploration.controller;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -20,15 +21,17 @@ public class FilterJourneysForThisCelestial implements EventHandler<ActionEvent>
         this.mainView = mainView;
     }
 
-    @Override
-    public void handle(ActionEvent actionEvent) {
-        selectedItem = mainView.getCelestialBodiesTV().getSelectionModel().getSelectedItem();
-        if(selectedItem != null){
-            List<Journey> onlyJourneysForThisCelestial = new ArrayList<>();
-            onlyJourneysForThisCelestial = JDBCUtils.getJourneysOnlyForThisCelestial(selectedItem);
-            mainView.setJourneysOL((ObservableList<Journey>) onlyJourneysForThisCelestial);
-            mainView.getJourneysLV().refresh();
-        }
 
+
+    @Override
+    public void handle(ActionEvent actionSelected) {
+        selectedItem = mainView.getCelestialBodiesTV().getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            List<Journey> filteredJourneys = JDBCUtils.getJourneysOnlyForThisCelestial(selectedItem);
+            ObservableList<Journey> observableJourneyList = FXCollections.observableArrayList(filteredJourneys);
+            mainView.getJourneysLV().setItems(observableJourneyList);  // Directly set items on ListView
+            System.out.println("Filtered Journeys: " + observableJourneyList);
+        }
     }
+
 }

@@ -73,7 +73,7 @@ public class TestM {
         JDBCUtils.insertIntoMissions(1, Date.valueOf("2024-05-25"), Date.valueOf("2024-05-26"));
         // Insert sample data into HabitabilityCriteria
         // Insert sample data into User
-        JDBCUtils.insertIntoUsers("john_doe223123", "password123", "john.doe123123123@example.com", "John", "Doe");
+//        JDBCUtils.insertIntoUsers("john_doe223123", "password123", "john.doe123123123@example.com", "John", "Doe");
         // Insert sample data into JourneyUser
         JDBCUtils.insertIntoJourneysUsers(1, 1);
         // Insert sample data into ResidentialBuilding
@@ -98,7 +98,7 @@ public class TestM {
         Server server = Server.SERVER;
         JDBCUtils.updateCelestialBodies(1, "Updated Name", "Planet", true, 100.0f, -100.0f, 100.0f, 21.0f, 79.0f, 9.8f, 29.8f);
         JDBCUtils.updateJourneys(1, 1, "Updated Vehicle Code", new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
-        JDBCUtils.updateUsers(1, "user1", "pass1", "user1@example.com", "User1", "Surname1", "new_user1", "new_pass1", "new_user1@example.com", "New User1", "New Surname1");
+//        JDBCUtils.updateUsers(1, "user1", "pass1", "user1@example.com", "User1", "Surname1", "new_user1", "new_pass1", "new_user1@example.com", "New User1", "New Surname1");
         JDBCUtils.updateJourneysUsers(1, 1, 2, 2);
         JDBCUtils.updateResidentialBuildings(1, "Updated Building Name", 1, 100, new Date(2100,5,6));
         JDBCUtils.updateHousingPurchases(1, 1, 1, new Date(2100,5,6));
@@ -106,8 +106,10 @@ public class TestM {
     }
     public static void testSelect(){
         Server server = Server.SERVER;
-        System.out.println(JDBCUtils.getJourneysOnlyForThisCelestial(server.getCelestialBodies().get(0)));
-        System.out.println(JDBCUtils.getResidentialBuildingsForThisPlanet(server.getCelestialBodies().get(0)));
+        System.out.println(server.getCelestialBodies().get(17));
+        System.out.println(server.getJourneys());
+        System.out.println(JDBCUtils.getJourneysOnlyForThisCelestial(server.getCelestialBodies().get(17)));
+        System.out.println(JDBCUtils.getResidentialBuildingsForThisPlanet(server.getCelestialBodies().get(17)));
     }
 
     public TestM() {
@@ -115,7 +117,7 @@ public class TestM {
 //        testInsert();
 //        testDelete();
 //        testUpdate();
-        testRead();
+//        testRead();
 //        testSelect();
 
     }

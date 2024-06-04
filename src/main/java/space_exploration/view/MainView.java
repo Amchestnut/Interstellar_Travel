@@ -9,6 +9,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import space_exploration.controller.BuyHousePlaceAction;
 import space_exploration.controller.FilterBuildingForThisCelestial;
 import space_exploration.controller.FilterJourneysForThisCelestial;
 import space_exploration.controller.PickPersonAction;
@@ -26,10 +27,13 @@ public class MainView extends Scene {
     private Label pickAnyPlanetYouWantLB;
     private Label allAvailablePeopleLB;
     private Label allPickedPeopleLB;
+    private Label todaysDateLB;
     private Button pickPersonButton;
     private Button pickPlanetButton;        /// I THINK ITS REDUNDENT
     private Button filterBuldingsForThisCelestialButton;
     private Button filterJourneysForThisCelestialButton;
+    private Button nextDaybutton;
+    private Button buyHousePlaceButton;
 
     private ObservableList<Journey> journeysOL;
     private ObservableList<ResidentialBuilding> housingOL;
@@ -58,16 +62,19 @@ public class MainView extends Scene {
         filterBuldingsForThisCelestialButton = new Button("Filter homes for the picked planet");        /// maybe add money per resident ??? So they have money to buy
         pickPersonButton= new Button("Pick this person");               ///
         pickPlanetButton = new Button("Pick this planet");
+        nextDaybutton = new Button("Skip to next day");
+        buyHousePlaceButton = new Button("Buy house place in selected residential building");
 
         controlPanelLB = new Label("Control panel...");
         pickAnyPlanetYouWantLB = new Label("Pick any planet or satellite you want to move on. Every one of them is habitable (for now ;))");
         allAvailablePeopleLB = new Label("List of every person available to travel with you");
         allPickedPeopleLB = new Label("List of every person you have picked to go on interstellar journey with you");
+        todaysDateLB = new Label(Server.SERVER.getToday().toString());
 
-        journeysOL = FXCollections.observableArrayList(Server.SERVER.getJourneys());
+        journeysOL = FXCollections.observableArrayList();
         housingOL = FXCollections.observableArrayList(Server.SERVER.getResidentialBuildings());
         /// here i want to check if the celestial body is habitale or not with a QUERY to database, saying WHERE AND SATYSFYING all the criteria for a celestial body to be habitable
-        allUsersOL = FXCollections.observableArrayList(Server.SERVER.getAvaiableUsers());
+        allUsersOL = FXCollections.observableArrayList(Server.SERVER.getAvailableUsers());
         /// TODO: da li staviti trenutnog logovanog usera u pickovane usere??
         pickedUsersOL = FXCollections.observableArrayList();                          // TODO: na pocetku prazno, a posle prilikom clicka na button, dodacemo usera jednog po jednog u listu izabranih za putovanje
 
@@ -111,7 +118,7 @@ public class MainView extends Scene {
         // Organize layout
         VBox leftVBox = new VBox(10, journeysLV);
         VBox rightVBox = new VBox(10, housingLV);
-        VBox centerVBox = new VBox(10, controlPanelLB, filterJourneysForThisCelestialButton, pickPlanetButton, pickPersonButton, filterBuldingsForThisCelestialButton);
+        VBox centerVBox = new VBox(10, controlPanelLB, todaysDateLB, filterJourneysForThisCelestialButton, buyHousePlaceButton, pickPersonButton, filterBuldingsForThisCelestialButton);
         centerVBox.setAlignment(Pos.CENTER);
         allUsersLV.setMaxHeight(150);
         pickedUsersLV.setMaxHeight(150);
@@ -122,7 +129,7 @@ public class MainView extends Scene {
         // Position elements in BorderPane
         root.setTop(topHBox);
 
-        VBox bottomVbox = new VBox(10, pickAnyPlanetYouWantLB, celestialBodiesTV);
+        VBox bottomVbox = new VBox(10, pickAnyPlanetYouWantLB, celestialBodiesTV, nextDaybutton);
         bottomVbox.setAlignment(Pos.CENTER);
         root.setCenter(bottomVbox);  // Ensuring TableView is added
     }
@@ -134,8 +141,42 @@ public class MainView extends Scene {
         filterBuldingsForThisCelestialButton.setOnAction(new FilterBuildingForThisCelestial(this));
         filterJourneysForThisCelestialButton.setOnAction(new FilterJourneysForThisCelestial(this));
         pickPersonButton.setOnAction(new PickPersonAction(this));
+        nextDaybutton.setOnAction(e->Server.SERVER.getToday().nextDay());
+        buyHousePlaceButton.setOnAction(new BuyHousePlaceAction(this));
     }
 
+
+    public Label getAllAvailablePeopleLB() {
+        return allAvailablePeopleLB;
+    }
+
+    public void setAllAvailablePeopleLB(Label allAvailablePeopleLB) {
+        this.allAvailablePeopleLB = allAvailablePeopleLB;
+    }
+
+    public Label getAllPickedPeopleLB() {
+        return allPickedPeopleLB;
+    }
+
+    public void setAllPickedPeopleLB(Label allPickedPeopleLB) {
+        this.allPickedPeopleLB = allPickedPeopleLB;
+    }
+
+    public Label getTodaysDateLB() {
+        return todaysDateLB;
+    }
+
+    public void setTodaysDateLB(Label todaysDateLB) {
+        this.todaysDateLB = todaysDateLB;
+    }
+
+    public Button getNextDaybutton() {
+        return nextDaybutton;
+    }
+
+    public void setNextDaybutton(Button nextDaybutton) {
+        this.nextDaybutton = nextDaybutton;
+    }
 
     public Label getControlPanelLB() {
         return controlPanelLB;

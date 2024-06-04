@@ -43,7 +43,8 @@ CREATE TABLE Users (
                        password VARCHAR(255) NOT NULL,
                        email VARCHAR(255) UNIQUE NOT NULL,
                        name VARCHAR(255),
-                       surname VARCHAR(255)
+                       surname VARCHAR(255),
+                       date_of_birth DATE
 );
 
 CREATE TABLE JourneysUsers (

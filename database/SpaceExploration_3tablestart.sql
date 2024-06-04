@@ -2,60 +2,103 @@ INSERT INTO CelestialBodies
     (name, type, researched, mean_distance_from_star, lowest_temperature, highest_temperature, oxygen_percentage, other_gas_percentage, gravitational_field_height, orbital_speed) VALUES
                  ('Mercury', 'Planet', 1, 58, 100, 700, 0, 100, 11.6, 47.87),
                  ('Venus', 'Planet', 1, 108, 737, 737, 0, 96, 50.2, 35.02),
-                 ('Earth', 'Planet', 1, 151, 184, 330, 21, 78, 9.8, 29.78),
+                 ('Earth', 'Planet', 1, 151, 220, 330, 21, 78, 9.8, 29.78),
                  ('Mars', 'Planet', 1, 199, 130, 308, 0.13, 95.97, 3.71, 24.07),
                  ('Jupiter', 'Planet', 1, 101, 165, 165, 0, 90, 24.79, 13.07),
                  ('Saturn', 'Planet', 1, 143, 134, 134, 0, 96, 10.44, 9.69),
                  ('Uranus', 'Planet', 1, 287, 76, 76, 0, 83, 8.69, 6.81),
                  ('Neptune', 'Planet', 1, 45, 72, 72, 0, 80, 11.15, 5.43),
                  ('Pluto', 'Planet', 1, 59, 33, 55, 0, 97, 0.62, 4.74),
-                 ('Alpha Bb', 'Planet', 1, 60, 1200, 1200, 0, 0, 52.88, 25),
-                 ('Zarmina', 'Planet', 1, 21, 240, 300, 5, 80, 7.5, 30),
-                 ('Tatooine', 'Planet', 1, 31, 200, 317, 0, 95, 9.0, 20),
-                 ('Vulcan', 'Planet', 1, 160, 400, 500, 5, 85, 11.0, 35),
-                 ('Pandora', 'Planet', 1, 19, 180, 310, 15, 75, 8.2, 12),
-                 ('Krypton', 'Planet', 1, 27, 173, 273, 20, 70, 22.0, 28),
-                 ('Coruscant', 'Planet', 1, 35, 220, 300, 21, 79, 12.5, 25),
-                 ('Hoth', 'Satellite', 1, 42, 70, 100, 0.1, 99.9, 1.8, 10),
-                 ('Nova Terra', 'Planet', 0, 15, 200, 300, 20, 75, 1000, 30),
-                 ('Aurora Prime', 'Planet', 0, 18, 220, 340, 22, 70, 1000, 32),
-                 ('Caelus', 'Planet', 0, 12, 150, 250, 23, 72, 1000, 25),
-                 ('Seraphine', 'Planet', 0, 17, 180, 280, 25, 65, 1000, 29),
-                 ('Blue Haven', 'Planet', 0, 20, 210, 330, 18, 77, 1000, 31),
-                 ('Gallifrey', 'Planet', 0, 14, 250, 320, 18, 82, 9.7, 15),
-                 ('Arrakis', 'Planet', 0, 5, 150, 450, 0.5, 99.5, 12.0, 22),
-                 ('Cybertron', 'Planet', 0, 15, 100, 300, 0, 100, 13.0, 17),
-                 ('Matejina Utopija', 'Planet', 0, 10, 290, 310, 99, 1, 500, 20),
-                 ('Zion', 'Satellite', 0, 21, 190, 290, 20, 75, 1000, 33),
-                 ('Elara', 'Planet', 0, 30, 140, 260, 0, 99, 6.5, 19),
-                 ('Persephone', 'Planet', 0, 19, 230, 310, 17, 78, 1000, 29),
-                 ('Astraea', 'Planet', 1, 180, 160, 260, 20, 70, 1200, 30),
-                 ('Nostromo', 'Planet', 0, 18, 195, 315, 21, 74, 1000, 27);
+                 ('Alpha Bb', 'Planet', 1, 160, 200, 300, 20, 75, 1200, 30),
+                 ('Zarmina', 'Planet', 1, 150, 180, 280, 18, 77, 1000, 29),
+                 ('Tatooine', 'Planet', 1, 120, 160, 280, 19, 76, 1000, 28),
+                 ('Vulcan', 'Planet', 1, 160, 210, 330, 18, 76, 1000, 30),
+                 ('Pandora', 'Planet', 1, 145, 170, 290, 17, 78, 1000, 32),
+                 ('Krypton', 'Planet', 1, 110, 160, 260, 20, 70, 1200, 30),
+                 ('Coruscant', 'Planet', 1, 135, 180, 300, 21, 79, 1200, 25),
+                 ('Nova Terra', 'Planet', 0, 180, 190, 300, 20, 75, 1000, 32),
+                 ('Aurora Prime', 'Planet', 0, 125, 170, 290, 21, 78, 1000, 30),
+                 ('Caelus', 'Planet', 0, 140, 180, 280, 20, 78, 1000, 31),
+                 ('Seraphine', 'Planet', 0, 115, 160, 270, 18, 80, 1000, 27),
+                 ('Blue Haven', 'Planet', 0, 130, 190, 300, 17, 75, 1000, 29),
+                 ('Matejina Utopija', 'Planet', 0, 180, 220, 310, 20, 75, 1200, 30),
+                 ('Elara', 'Planet', 0, 150, 200, 310, 16, 79, 1000, 33),
+                 ('Persephone', 'Planet', 0, 190, 230, 310, 17, 78, 1000, 29),
+                 ('Astraea', 'Planet', 1, 180, 200, 300, 20, 75, 1200, 30),
+                 ('Nostromo', 'Planet', 0, 195, 205, 315, 21, 74, 1000, 27);
 
 
 
 INSERT INTO Missions (celestial_body_id, start_date, end_date)
 VALUES
-    (18, '2086-06-08', '2087-06-08'),  -- Mission to Nova Terra
-    (19, '2098-10-21', '2099-10-21'),  -- Mission to Aurora Prime
-    (20, '2100-02-13', '2101-02-13'),  -- Mission to Caelus
-    (21, '2127-05-05', '2128-05-05'),  -- Mission to Seraphine
-    (22, '2144-12-22', '2145-12-22'),  -- Mission to Blue Haven
-    (23, '2149-09-28', '2150-09-28'),  -- Mission to Gallifrey
-    (24, '2166-11-16', '2167-11-16'),  -- Mission to Arrakis
-    (25, '2171-07-14', '2172-07-14'),  -- Mission to Cybertron
-    (26, '2182-03-30', '2183-03-30'),  -- Mission to Matejina Utopija
-    (27, '2199-02-02', '2200-02-02');  -- Mission to Zion
+    (1, '2086-06-08', '2087-06-08'),  -- Mission to Nova Terra
+    (2, '2098-10-21', '2099-10-21'),  -- Mission to Aurora Prime
+    (3, '2100-02-13', '2101-02-13'),  -- Mission to Caelus
+    (4, '2127-05-05', '2128-05-05'),  -- Mission to Seraphine
+    (5, '2144-12-22', '2145-12-22'),  -- Mission to Blue Haven
+    (6, '2149-09-28', '2150-09-28'),  -- Mission to Gallifrey
+    (7, '2166-11-16', '2167-11-16'),  -- Mission to Arrakis
+    (8, '2171-07-14', '2172-07-14'),  -- Mission to Cybertron
+    (9, '2182-03-30', '2183-03-30'),  -- Mission to Matejina Utopija
+    (10, '2199-02-02', '2200-02-02');  -- Mission to Zion
 
-INSERT INTO Users (username, password, email, name, surname)
+INSERT INTO Users (username, password, email, name, surname, date_of_birth)
 VALUES
-    ('john_doe', 'pass1234', 'john.doe@example.com', 'John', 'Doe'),
-    ('jane_smith', 'pass5678', 'jane.smith@example.com', 'Jane', 'Smith'),
-    ('sam_brown', 'sammy123', 'sam.brown@example.com', 'Samuel', 'Brown'),
-    ('lily_evans', 'lilyflower', 'lily.evans@example.com', 'Lily', 'Evans'),
-    ('tom_black', 'tommy2024', 'tom.black@example.com', 'Thomas', 'Black'),
-    ('sarah_connor', 'terminator', 's.connor@example.com', 'Sarah', 'Connor'),
-    ('mark_bolt', 'lightning', 'mark.bolt@example.com', 'Mark', 'Bolt');
+    ('john_doe', 'pass1234', 'john.doe@example.com', 'John', 'Doe', '2152-04-23'),
+    ('jane_smith', 'pass5678', 'jane.smith@example.com', 'Jane', 'Smith', '2163-08-15'),
+    ('sam_brown', 'sammy123', 'sam.brown@example.com', 'Samuel', 'Brown', '2175-11-30'),
+    ('lily_evans', 'lilyflower', 'lily.evans@example.com', 'Lily', 'Evans', '2184-03-09'),
+    ('tom_black', 'tommy2024', 'tom.black@example.com', 'Thomas', 'Black', '2158-07-21'),
+    ('sarah_connor', 'terminator', 's.connor@example.com', 'Sarah', 'Connor', '2172-12-05'),
+    ('mark_bolt', 'lightning', 'mark.bolt@example.com', 'Mark', 'Bolt', '2190-05-17'),
+    ('vanja_petrovic', 'vp2020', 'vanja.petrovic@example.com', 'Vanja', 'Petrovic', '2175-05-12'),
+    ('milena_pavlovic', 'mp2021', 'milena.pavlovic@example.com', 'Milena', 'Pavlovic', '2182-02-19'),
+    ('nikola_jovanovic', 'nj2022', 'nikola.jovanovic@example.com', 'Nikola', 'Jovanovic', '2168-11-07'),
+    ('sofija_markovic', 'sm2023', 'sofija.markovic@example.com', 'Sofija', 'Markovic', '2190-08-24'),
+    ('filip_popovic', 'fp2024', 'filip.popovic@example.com', 'Filip', 'Popovic', '2185-03-15'),
+    ('marija_tomic', 'mt2025', 'marija.tomic@example.com', 'Marija', 'Tomic', '2172-10-21'),
+    ('luka_antic', 'la2026', 'luka.antic@example.com', 'Luka', 'Antić', '2163-07-04'),
+    ('ana_milic', 'am2027', 'ana.milic@example.com', 'Ana', 'Milić', '2188-09-09'),
+    ('petar_nikolic', 'pn2028', 'petar.nikolic@example.com', 'Petar', 'Nikolić', '2170-12-28'),
+    ('jovana_ilić', 'ji2029', 'jovana.ilić@example.com', 'Jovana', 'Ilić', '2165-04-17'),
+    ('viktor_trajkovic', 'vt2020', 'viktor.trajkovic@example.com', 'Viktor', 'Trajkovic', '2177-02-14'),
+    ('miroslava_petrovic', 'mp2021', 'miroslava.petrovic@example.com', 'Miroslava', 'Petrovic', '2184-09-21'),
+    ('nikola_milosevic', 'nm2022', 'nikola.milosevic@example.com', 'Nikola', 'Milošević', '2169-04-03'),
+    ('sofija_radovanovic', 'sr2023', 'sofija.radovanovic@example.com', 'Sofija', 'Radovanović', '2189-06-18'),
+    ('filip_lazic', 'fl2024', 'filip.lazic@example.com', 'Filip', 'Lazić', '2186-01-25'),
+    ('marija_jovanovic', 'mj2025', 'marija.jovanovic@example.com', 'Marija', 'Jovanovic', '2173-10-10'),
+    ('luka_popovic', 'lp2026', 'luka.popovic@example.com', 'Luka', 'Popovic', '2164-05-19'),
+    ('ana_tomic', 'at2027', 'ana.tomic@example.com', 'Ana', 'Tomić', '2180-12-06'),
+    ('petar_markovic', 'pm2028', 'petar.markovic@example.com', 'Petar', 'Marković', '2171-07-23'),
+    ('jovana_milic', 'jm2029', 'jovana.milic@example.com', 'Jovana', 'Milić', '2166-02-12'),
+    ('alex_smith', 'password123', 'alex.smith@example.com', 'Alex', 'Smith', '2157-02-13'),
+    ('clara_johnson', 'pass2345', 'clara.johnson@example.com', 'Clara', 'Johnson', '2164-06-06'),
+    ('michael_williams', 'michael123', 'michael.williams@example.com', 'Michael', 'Williams', '2172-04-11'),
+    ('emily_taylor', 'emily2024', 'emily.taylor@example.com', 'Emily', 'Taylor', '2181-01-18'),
+    ('david_carter', 'david1234', 'david.carter@example.com', 'David', 'Carter', '2159-09-24'),
+    ('rachel_walker', 'rachel2025', 'rachel.walker@example.com', 'Rachel', 'Walker', '2174-03-07'),
+    ('steven_garcia', 'steven123', 'steven.garcia@example.com', 'Steven', 'Garcia', '2186-12-19'),
+    ('maria_sanchez', 'maria2026', 'maria.sanchez@example.com', 'Maria', 'Sanchez', '2176-11-08'),
+    ('jose_martinez', 'jose1234', 'jose.martinez@example.com', 'Jose', 'Martinez', '2167-10-25'),
+    ('ana_lopez', 'ana2027', 'ana.lopez@example.com', 'Ana', 'Lopez', '2183-08-22'),
+    ('pedro_gomez', 'pedro123', 'pedro.gomez@example.com', 'Pedro', 'Gomez', '2158-07-16'),
+    ('isabel_hernandez', 'isabel2028', 'isabel.hernandez@example.com', 'Isabel', 'Hernandez', '2175-05-09'),
+    ('carlos_rodriguez', 'carlos1234', 'carlos.rodriguez@example.com', 'Carlos', 'Rodriguez', '2166-04-02'),
+    ('andrea_garcia', 'andrea2029', 'andrea.garcia@example.com', 'Andrea', 'Garcia', '2182-02-15'),
+    ('manuel_sanchez', 'manuel123', 'manuel.sanchez@example.com', 'Manuel', 'Sanchez', '2159-11-28'),
+    ('carolina_martinez', 'carolina2024', 'carolina.martinez@example.com', 'Carolina', 'Martinez', '2176-10-11'),
+    ('jorge_lopez', 'jorge1234', 'jorge.lopez@example.com', 'Jorge', 'Lopez', '2167-09-20'),
+    ('laura_gomez', 'laura2025', 'laura.gomez@example.com', 'Laura', 'Gomez', '2184-07-13'),
+    ('diego_hernandez', 'diego123', 'diego.hernandez@example.com', 'Diego', 'Hernandez', '2161-06-05'),
+    ('alejandra_rodriguez', 'alejandra2026', 'alejandra.rodriguez@example.com', 'Alejandra', 'Rodriguez', '2178-05-08'),
+    ('luis_garcia', 'luis1234', 'luis.garcia@example.com', 'Luis', 'Garcia', '2163-04-01'),
+    ('paola_sanchez', 'paola2027', 'paola.sanchez@example.com', 'Paola', 'Sanchez', '2180-02-14'),
+    ('ricardo_martinez', 'ricardo123', 'ricardo.martinez@example.com', 'Ricardo', 'Martinez', '2155-11-27'),
+    ('celestial_explorer', 'deepsky2042', 'celestial.explorer@voyager.net', 'Celestial', 'Explorer', '2193-09-08'),
+    ('nova.horizon', 'nebulawanderer', 'nova.horizon@galactic.org', 'Nova', 'Horizon', '2179-03-27'),
+    ('cosmic.navigator', 'astraljourney', 'cosmic.navigator@exploration.gov', 'Cosmic', 'Navigator', '2162-11-15'),
+    ('starlight.pioneer', 'blazingskies', 'starlight.pioneer@pioneer.com', 'Starlight', 'Pioneer', '2190-08-04'),
+    ('astral.seeker', 'nebulaexplorer', 'astral2.seeker@exploration.net', 'Astral', 'Seeker', '2187-05-22');
 
 
 INSERT INTO ResidentialBuildings (name, celestial_body_id, capacity, build_date)
@@ -79,22 +122,46 @@ VALUES
     (1, 5, '2096-10-12'), -- John Doe at Colony Epsilon
     (2, 5, '2096-11-01'), -- Jane Smith at Colony Epsilon
     (3, 6, '2101-01-17'), -- Samuel Brown at Colony Zeta
-    (4, 6, '2101-02-20'); -- Lily Evans at Colony Zeta
+    (4, 6, '2101-02-20');
 
 
 INSERT INTO Journeys (destination_body_id, vehicle_code, departure_date, arrival_date)
 VALUES
-(18, 'XCV-777', '2124-08-01 10:00:00', '2124-10-01 12:00:00'),  -- Nova Terra (2 month travel)
-(19, 'YZT-123', '2125-05-08 15:00:00', '2125-08-08 18:00:00'),  -- Aurora Prime (3 month travel)
-(20, 'XCV-777', '2126-08-15 12:30:00', '2126-12-15 15:00:00'),  -- Caelus (4 month travel)
-(21, 'YZT-123', '2127-06-22 09:00:00', '2127-09-15 11:00:00'),  -- Seraphine (2.5 month travel)
-(22, 'XCV-777', '2128-02-09 18:00:00', '2128-05-25 14:00:00'),  -- Blue Haven (3.5 month travel)
-(23, 'ZZT-999', '2129-04-12 07:00:00', '2129-09-12 10:00:00'),  -- Gallifrey (5 month travel)
-(24, 'XCV-777', '2130-01-18 16:00:00', '2130-08-18 09:00:00'),  -- Arrakis (7 month travel)
-(25, 'YZT-123', '2131-10-26 05:00:00', '2132-04-26 12:00:00'),  -- Cybertron (6 month travel)
-(26, 'XCV-777', '2132-07-04 20:00:00', '2132-11-20 17:00:00'),  -- Matejina Utopija (4.5 month travel)
-(27, 'YZT-123', '2133-03-15 08:00:00', '2133-05-01 15:00:00');  -- Zion (1.5 month travel)
+(18, 'XCV-777', '2200-01-01 00:00:00', '2200-01-28 12:00:00'),  -- Aurora prime id 18
+(18, 'YZT-123', '2200-02-01 00:00:00', '2200-02-21 12:00:00'),
+(18, 'XCV-777', '2200-03-01 00:00:00', '2200-03-31 12:00:00'),
+(18, 'YZT-123', '2200-04-01 00:00:00', '2200-04-30 12:00:00'),
+(18, 'XCV-777', '2200-05-01 00:00:00', '2200-05-29 12:00:00'),
+(18, 'YZT-123', '2200-06-01 00:00:00', '2200-06-27 12:00:00'),
+(18, 'XCV-777', '2200-07-01 00:00:00', '2200-07-31 12:00:00'),
+(18, 'YZT-123', '2200-08-01 00:00:00', '2200-08-30 12:00:00'),
+(18, 'XCV-777', '2200-09-01 00:00:00', '2200-09-28 12:00:00'),
+(18, 'YZT-123', '2200-10-01 00:00:00', '2200-10-29 12:00:00'),
+(18, 'XCV-777', '2200-11-01 00:00:00', '2200-11-30 12:00:00'),
+(18, 'YZT-123', '2200-12-01 00:00:00', '2200-12-31 12:00:00'),
+(18, 'XCV-777', '2201-01-01 00:00:00', '2201-01-30 12:00:00'),
+(18, 'YZT-123', '2201-02-01 00:00:00', '2201-02-28 12:00:00'),
+(18, 'XCV-777', '2201-03-01 00:00:00', '2201-03-31 12:00:00'),
+(18, 'YZT-123', '2201-04-01 00:00:00', '2201-04-30 12:00:00'),
+(18, 'XCV-777', '2201-05-01 00:00:00', '2201-05-29 12:00:00'),
+(18, 'YZT-123', '2201-06-01 00:00:00', '2201-06-27 12:00:00'),
+(18, 'XCV-777', '2201-07-01 00:00:00', '2201-07-28 12:00:00'),
+(18, 'YZT-123', '2201-08-01 00:00:00', '2201-09-11 12:00:00'),
+(18, 'YZT-123', '2201-09-01 00:00:00', '2201-09-27 12:00:00'),
+(18, 'XCV-777', '2201-10-01 00:00:00', '2201-11-25 12:00:00'),
+(18, 'YZT-123', '2201-11-01 00:00:00', '2201-11-29 12:00:00'),
+(18, 'YZT-123', '2201-12-01 00:00:00', '2201-12-30 12:00:00'),
+(18, 'XCV-777', '2200-08-01 10:00:00', '2200-09-05 12:00:00'),
+(19, 'YZT-123', '2200-05-08 15:00:00', '2200-06-02 18:00:00'),
+(20, 'XCV-777', '2200-08-15 12:30:00', '2200-10-12 15:00:00'),
+(21, 'YZT-123', '2127-06-22 09:00:00', '2127-09-15 11:00:00'),
+(22, 'XCV-777', '2128-02-09 18:00:00', '2128-05-25 14:00:00'),
+(23, 'ZZT-999', '2129-04-12 07:00:00', '2129-09-12 10:00:00'),
+(24, 'XCV-777', '2130-01-18 16:00:00', '2130-08-18 09:00:00'),
+(25, 'YZT-123', '2131-10-26 05:00:00', '2132-04-26 12:00:00'),
+(26, 'XCV-777', '2132-07-04 20:00:00', '2132-11-20 17:00:00');
 
 
-
-INSERT INTO Calendar (today) VALUES ('2100-06-04');
+INSERT INTO Calendar (today)
+VALUES
+    ('2200-01-01');

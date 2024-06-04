@@ -3,9 +3,12 @@ package space_exploration.controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
+import javafx.scene.control.DatePicker;
 import space_exploration.ApplicationFramework;
 import space_exploration.model.utility.JDBCUtils;
 import space_exploration.view.RegistrationView;
+
+import java.sql.Date;
 
 public class RegistrationAction implements EventHandler<ActionEvent> {
     private RegistrationView registrationView;
@@ -23,8 +26,9 @@ public class RegistrationAction implements EventHandler<ActionEvent> {
             String email = registrationView.getEmailTF().getText();
             String name = registrationView.getNameTF().getText();
             String surname = registrationView.getSurnameTF().getText();
+            Date date = Date.valueOf(registrationView.getDateOfBirthDP().getValue());
 
-            JDBCUtils.insertIntoUsers(username,password,email,name,surname);
+            JDBCUtils.insertIntoUsers(username,password,email,name,surname,date);
             ApplicationFramework.getInstance().showStartView();
             // TODO: Dodati popup prozor gde pise uspesna registracija!!!
         }

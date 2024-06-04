@@ -19,7 +19,6 @@ public class Calendar implements IPublisher{
         this.today = today;
     }
     public void nextDay(){
-        //TODO: change it to nextYear maybe
         today = Date.valueOf(today.toLocalDate().plusDays(1));
         notifySubscribers(new MessageUpdate(this));
     }
@@ -29,9 +28,7 @@ public class Calendar implements IPublisher{
 
     @Override
     public String toString() {
-        return "Calendar{" +
-                "today=" + today +
-                '}';
+        return "today = " + today;
     }
 
     @Override

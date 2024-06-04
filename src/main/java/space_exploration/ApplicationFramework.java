@@ -3,6 +3,7 @@ package space_exploration;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import space_exploration.model.base.Server;
 import space_exploration.model.utility.JDBCUtils;
 import space_exploration.model.utility.Updater;
 import space_exploration.view.MainView;
@@ -46,7 +47,15 @@ public class ApplicationFramework {
     }
 
     public void showMainView() {
-        Scene mainView = new MainView();
+        MainView mainView = new MainView();
         mainStage.setScene(mainView);
+    }
+
+    public Stage getMainStage() {
+        return mainStage;
+    }
+
+    public void setMainStage(Stage mainStage) {
+        this.mainStage = mainStage;
     }
 }

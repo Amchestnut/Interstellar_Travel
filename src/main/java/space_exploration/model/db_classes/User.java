@@ -6,6 +6,7 @@ import space_exploration.observer.ISubscriber;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Date;
 public class User implements IPublisher {
     private List<ISubscriber> subscribers = new ArrayList<>();
 
@@ -15,15 +16,17 @@ public class User implements IPublisher {
     private String email;
     private String name;
     private String surname;
+    private Date date_of_birth;
 
     /// TODO: dal da mu stavimo i planetu na kojo jtrenutno zivi? defaultno ce da bude earth, pa posle da menjamo
-    public User(int id, String username, String password, String email, String name, String surname) {
+    public User(int id, String username, String password, String email, String name, String surname,Date date_of_birth) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.name = name;
         this.surname = surname;
+        this.date_of_birth = date_of_birth;
 
     }
 
@@ -87,7 +90,21 @@ public class User implements IPublisher {
 
     }
 
+    public List<ISubscriber> getSubscribers() {
+        return subscribers;
+    }
 
+    public void setSubscribers(List<ISubscriber> subscribers) {
+        this.subscribers = subscribers;
+    }
+
+    public Date getDate_of_birth() {
+        return date_of_birth;
+    }
+
+    public void setDate_of_birth(Date date_of_birth) {
+        this.date_of_birth = date_of_birth;
+    }
 
     @Override
     public String toString() {

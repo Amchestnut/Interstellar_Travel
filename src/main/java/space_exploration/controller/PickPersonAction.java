@@ -20,12 +20,11 @@ public class PickPersonAction implements EventHandler<ActionEvent> {
         if(personPicked != null){
 
             // TODO: IZBACUJE SE USER KOJI JE UPRAVO IZABRAN iz liste  (pretpostavljam da treba samo da uradimo add  u ARRAYLISTU, ali mora svasta u bazi da se namesti)
-            // mainView.setAllUsersOL();
+            User pickedUser = mainView.getAllUsersLV().getSelectionModel().getSelectedItem();
+            mainView.getAllUsersLV().getItems().remove(pickedUser);
 
             // TODO: /// DODAJE SE USER KOJI JE UPRAVO IZABRAN iz liste
-            //mainView.setPickedUsersOL();
-
-
+            mainView.getPickedUsersLV().getItems().add(pickedUser);
             mainView.getAllUsersLV().refresh();     /// IZBACUJE SE USER KOJI JE UPRAVO IZABRAN iz liste  (samo osvezi view da sad vidimo sve osvezeno)
             mainView.getPickedUsersLV().refresh();  /// DODAJE SE USER KOJI JE UPRAVO IZABRAN iz liste
 

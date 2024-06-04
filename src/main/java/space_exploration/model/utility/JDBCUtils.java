@@ -1,6 +1,7 @@
 package space_exploration.model.utility;
 
 import javafx.scene.control.Alert;
+import space_exploration.model.base.Server;
 import space_exploration.model.db_classes.*;
 
 import java.sql.*;
@@ -62,7 +63,6 @@ public class JDBCUtils {
                 Date date = resultSet.getDate(1);
                 Calendar today = new Calendar(date);
                 today.addSubscriber(Updater.getUpdater());
-                today.nextDay();
                 return today;
             }
         }catch (SQLException e) {
@@ -71,85 +71,54 @@ public class JDBCUtils {
         return null;
     }
 
-//    public static int countDeathsUnder40FromLastYear(CelestialBody celestialBody) {
-//        Calendar today = selectFromCalendar();
-//        if (today == null) {
-//            throw new RuntimeException("Unable to retrieve today's date from the Calendar table.");
-//        }
-//
-//        String countQuery = "SELECT COUNT(*) AS deaths_under_40 " +
-//                "FROM Deaths d " +
-//                "JOIN Users u ON d.user_id = u.id " +
-//                "JOIN CelestialBodies cb ON d.celestial_body_id = cb.id " +
-//                "WHERE cb.id = ? " +
-//                "AND d.age_at_death < 40 " +
-//                "AND d.death_date BETWEEN DATE_SUB(?, INTERVAL 1 YEAR) AND ?";
-//
-//        try (PreparedStatement statement = connection.prepareStatement(countQuery)) {
-//            statement.setInt(1, celestialBody.getId());
-//            statement.setDate(2, today.getToday());
-//            statement.setDate(3, today.getToday());
-//
-//            try (ResultSet resultSet = statement.executeQuery()) {
-//                if (resultSet.next()) {
-//                    return resultSet.getInt("deaths_under_40");
-//                }
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        return 0;
-//    }
-    //TODO: CHECK OUR DATABASE FOR ERRORS
-public static List<CelestialBody> selectHabitableCelestialBodies() {
-    List<CelestialBody> habitableBodies = new ArrayList<>();
-    Calendar calendar = selectFromCalendar();
-    String query = "SELECT cb.* " +
-            "FROM CelestialBodies cb " +
-            "WHERE cb.mean_distance_from_star BETWEEN 100 AND 200 " +
-            "AND cb.lowest_temperature BETWEEN 150 AND 250 " +
-            "AND cb.highest_temperature BETWEEN 250 AND 350 " +
-            "AND (cb.highest_temperature - cb.lowest_temperature) <= 120 " +
-            "AND cb.oxygen_percentage BETWEEN 15 AND 25 " +
-            "AND (cb.oxygen_percentage + cb.other_gas_percentage) BETWEEN 90 AND 99 " +
-            "AND cb.gravitational_field_height >= 1000 " +
-            "AND cb.orbital_speed BETWEEN 25 AND 35 " +
-            "AND (SELECT COUNT(*) FROM Deaths d " +
-            "WHERE d.celestial_body_id = cb.id " +
-            "AND d.age_at_death < 40 " +
-            "AND d.death_date BETWEEN DATE_SUB(?, INTERVAL 1 YEAR) AND ?) <= 20";
+    public static List<CelestialBody> selectHabitableCelestialBodies() {
+        List<CelestialBody> habitableBodies = new ArrayList<>();
+        Calendar calendar = selectFromCalendar();
+        String query = "SELECT cb.* " +
+                "FROM CelestialBodies cb " +
+                "WHERE cb.mean_distance_from_star BETWEEN 100 AND 200 " +
+                "AND cb.lowest_temperature BETWEEN 150 AND 250 " +
+                "AND cb.highest_temperature BETWEEN 250 AND 350 " +
+                "AND (cb.highest_temperature - cb.lowest_temperature) <= 120 " +
+                "AND cb.oxygen_percentage BETWEEN 15 AND 25 " +
+                "AND (cb.oxygen_percentage + cb.other_gas_percentage) BETWEEN 90 AND 99 " +
+                "AND cb.gravitational_field_height >= 1000 " +
+                "AND cb.orbital_speed BETWEEN 25 AND 35 " +
+                "AND (SELECT COUNT(*) FROM Deaths d " +
+                "WHERE d.celestial_body_id = cb.id " +
+                "AND d.age_at_death < 40 " +
+                "AND d.death_date BETWEEN DATE_SUB(?, INTERVAL 1 YEAR) AND ?) <= 20";
 
-    try (PreparedStatement statement = connection.prepareStatement(query)) {
-        statement.setDate(1, calendar.getToday());
-        statement.setDate(2, calendar.getToday());
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setDate(1, calendar.getToday());
+            statement.setDate(2, calendar.getToday());
 
-        try (ResultSet resultSet = statement.executeQuery()) {
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                String type = resultSet.getString("type");
-                boolean researched = resultSet.getBoolean("researched");
-                float meanDistanceFromStar = resultSet.getFloat("mean_distance_from_star");
-                float lowestTemperature = resultSet.getFloat("lowest_temperature");
-                float highestTemperature = resultSet.getFloat("highest_temperature");
-                float oxygenPercentage = resultSet.getFloat("oxygen_percentage");
-                float otherGasPercentage = resultSet.getFloat("other_gas_percentage");
-                float gravitationalFieldHeight = resultSet.getFloat("gravitational_field_height");
-                float orbitalSpeed = resultSet.getFloat("orbital_speed");
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    String name = resultSet.getString("name");
+                    String type = resultSet.getString("type");
+                    boolean researched = resultSet.getBoolean("researched");
+                    float meanDistanceFromStar = resultSet.getFloat("mean_distance_from_star");
+                    float lowestTemperature = resultSet.getFloat("lowest_temperature");
+                    float highestTemperature = resultSet.getFloat("highest_temperature");
+                    float oxygenPercentage = resultSet.getFloat("oxygen_percentage");
+                    float otherGasPercentage = resultSet.getFloat("other_gas_percentage");
+                    float gravitationalFieldHeight = resultSet.getFloat("gravitational_field_height");
+                    float orbitalSpeed = resultSet.getFloat("orbital_speed");
 
-                CelestialBody celestialBody = new CelestialBody(id, name, type, researched, meanDistanceFromStar,
-                        lowestTemperature, highestTemperature, oxygenPercentage, otherGasPercentage,
-                        gravitationalFieldHeight, orbitalSpeed);
-                habitableBodies.add(celestialBody);
+                    CelestialBody celestialBody = new CelestialBody(id, name, type, researched, meanDistanceFromStar,
+                            lowestTemperature, highestTemperature, oxygenPercentage, otherGasPercentage,
+                            gravitationalFieldHeight, orbitalSpeed);
+                    habitableBodies.add(celestialBody);
+                }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-    } catch (SQLException e) {
-        throw new RuntimeException(e);
-    }
 
-    return habitableBodies;
-}
+        return habitableBodies;
+    }
 
     public static List<Mission> selectAllFromMissions() {
         List<Mission> missionsList = new ArrayList<>();
@@ -195,10 +164,11 @@ public static List<CelestialBody> selectHabitableCelestialBodies() {
 
     public static List<Journey> getJourneysOnlyForThisCelestial(CelestialBody celestialBody) {
         List<Journey> journeysList = new ArrayList<>();
-        String query = "SELECT * FROM Journeys WHERE destination_body_id = ?";
-
+        String query = "SELECT * FROM Journeys WHERE destination_body_id = ? AND departure_date >= ?";
+        Server server = Server.SERVER;
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, celestialBody.getId());
+            statement.setDate(2,server.getToday().getToday());
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
@@ -226,14 +196,15 @@ public static List<CelestialBody> selectHabitableCelestialBodies() {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
-                int id = resultSet.getInt(1);
-                String username = resultSet.getString(2);
-                String password = resultSet.getString(3);
-                String email = resultSet.getString(4);
-                String name = resultSet.getString(5);
-                String surname = resultSet.getString(6);
+                int id = resultSet.getInt("id");
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
+                String email = resultSet.getString("email");
+                String name = resultSet.getString("name");
+                String surname = resultSet.getString("surname");
+                Date dateOfBirth = resultSet.getDate("date_of_birth");
 
-                User user = new User(id, username, password, email, name, surname);
+                User user = new User(id, username, password, email, name, surname, dateOfBirth);
                 usersList.add(user);
             }
         } catch (SQLException e) {
@@ -262,6 +233,27 @@ public static List<CelestialBody> selectHabitableCelestialBodies() {
     public static List<ResidentialBuilding> selectAllFromResidentialBuildings() {
         List<ResidentialBuilding> buildingsList = new ArrayList<>();
         String query = "SELECT * FROM ResidentialBuildings";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                String name = resultSet.getString(2);
+                int celestialBodyId = resultSet.getInt(3);
+                int capacity = resultSet.getInt(4);
+                Date buildDate = resultSet.getDate(5);
+
+                ResidentialBuilding building = new ResidentialBuilding(id, name, celestialBodyId, capacity, buildDate);
+                buildingsList.add(building);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return buildingsList;
+    }
+    public static List<ResidentialBuilding> selectAllAvailableFromResidentialBuildings() {
+        List<ResidentialBuilding> buildingsList = new ArrayList<>();
+        String query = "SELECT * FROM ResidentialBuildings WHERE capacity > 0 ";
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
@@ -411,10 +403,10 @@ public static List<CelestialBody> selectHabitableCelestialBodies() {
             throw new RuntimeException(e);
         }
     }
-    public static void insertIntoUsers(String username, String password, String email, String name, String surname) {
+    public static void insertIntoUsers(String username, String password, String email, String name, String surname, Date dateOfBirth) {
         String checkUsernameQuery = "SELECT COUNT(*) FROM Users WHERE username = ?";
         String checkEmailQuery = "SELECT COUNT(*) FROM Users WHERE email = ?";
-        String insertQuery = "INSERT INTO Users (username, password, email, name, surname) VALUES (?, ?, ?, ?, ?)";
+        String insertQuery = "INSERT INTO Users (username, password, email, name, surname, date_of_birth) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
             connection.setAutoCommit(false);
@@ -436,8 +428,7 @@ public static List<CelestialBody> selectHabitableCelestialBodies() {
                 checkEmailStatement.setString(1, email);
                 try (ResultSet rs = checkEmailStatement.executeQuery()) {
                     if (rs.next() && rs.getInt(1) > 0) {
-                        showAlert("Error", "Username already exists.");
-
+                        showAlert("Error", "Email already exists.");
                         System.out.println("Email already exists.");
                         return;
                     }
@@ -451,6 +442,7 @@ public static List<CelestialBody> selectHabitableCelestialBodies() {
                 insertStatement.setString(3, email);
                 insertStatement.setString(4, name);
                 insertStatement.setString(5, surname);
+                insertStatement.setDate(6, dateOfBirth);
                 insertStatement.executeUpdate();
                 connection.commit();
                 System.out.println("User successfully inserted.");
@@ -655,22 +647,22 @@ public static List<CelestialBody> selectHabitableCelestialBodies() {
 
 
     // Define update functions for other tables in a similar way
-public static void updateDeaths(int id, int celestialBodyId, int userId, Date deathDate, int ageAtDeath) {
-    String query = "UPDATE Deaths SET celestial_body_id=?, user_id=?, death_date=?, age_at_death=? WHERE id=?";
-    try {
-        PreparedStatement statement = connection.prepareStatement(query);
-        connection.setAutoCommit(false);
-        statement.setInt(1, celestialBodyId);
-        statement.setInt(2, userId);
-        statement.setDate(3, deathDate);
-        statement.setInt(4, ageAtDeath);
-        statement.setInt(5, id);
-        statement.executeUpdate();
-        connection.commit();
-    } catch (SQLException e) {
-        throw new RuntimeException(e);
+    public static void updateDeaths(int id, int celestialBodyId, int userId, Date deathDate, int ageAtDeath) {
+        String query = "UPDATE Deaths SET celestial_body_id=?, user_id=?, death_date=?, age_at_death=? WHERE id=?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            connection.setAutoCommit(false);
+            statement.setInt(1, celestialBodyId);
+            statement.setInt(2, userId);
+            statement.setDate(3, deathDate);
+            statement.setInt(4, ageAtDeath);
+            statement.setInt(5, id);
+            statement.executeUpdate();
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
-}
 
     public static void updateResidentialBuildings(int id, String name, int celestialBodyId, int capacity, Date buildDate) {
         String query = "UPDATE ResidentialBuildings SET name=?, celestial_body_id=?, capacity=?, build_date=? WHERE id=?";
@@ -738,8 +730,8 @@ public static void updateDeaths(int id, int celestialBodyId, int userId, Date de
         }
     }
     public static void updateUsers(int id, String username, String password, String email, String name, String surname,
-                                   String newUsername, String newPassword, String newEmail, String newName, String newSurname) {
-        String query = "UPDATE Users SET username=?, password=?, email=?, name=?, surname=? WHERE id=? AND username=? AND password=? AND email=? AND name=? AND surname=?";
+                                   String newUsername, String newPassword, String newEmail, String newName, String newSurname, Date newDateOfBirth) {
+        String query = "UPDATE Users SET username=?, password=?, email=?, name=?, surname=?, date_of_birth=? WHERE id=? AND username=? AND password=? AND email=? AND name=? AND surname=?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             connection.setAutoCommit(false);
@@ -748,15 +740,21 @@ public static void updateDeaths(int id, int celestialBodyId, int userId, Date de
             statement.setString(3, newEmail);
             statement.setString(4, newName);
             statement.setString(5, newSurname);
-            statement.setInt(6, id);
-            statement.setString(7, username);
-            statement.setString(8, password);
-            statement.setString(9, email);
-            statement.setString(10, name);
-            statement.setString(11, surname);
+            statement.setDate(6, newDateOfBirth);
+            statement.setInt(7, id);
+            statement.setString(8, username);
+            statement.setString(9, password);
+            statement.setString(10, email);
+            statement.setString(11, name);
+            statement.setString(12, surname);
             statement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException rollbackEx) {
+                throw new RuntimeException(rollbackEx);
+            }
             throw new RuntimeException(e);
         }
     }
@@ -791,7 +789,7 @@ public static void updateDeaths(int id, int celestialBodyId, int userId, Date de
         }
     }
     public static boolean checkLogin(String userName, String password) {
-        String query = "SELECT EXISTS(SELECT 1 FROM Users WHERE username=? AND password=?)";
+        String query = "SELECT EXISTS(SELECT 1 FROM Users u LEFT JOIN Deaths d ON u.id = d.user_id WHERE username = ? AND password = ? AND d.id IS NULL)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, userName);
             statement.setString(2, password);
@@ -823,8 +821,9 @@ public static void updateDeaths(int id, int celestialBodyId, int userId, Date de
                 String email = resultSet.getString(4);
                 String name = resultSet.getString(5);
                 String surname = resultSet.getString(6);
+                Date dateOfBirth = resultSet.getDate(7);
 
-                User user = new User(id, username, password, email, name, surname);
+                User user = new User(id, username, password, email, name, surname, dateOfBirth);
                 singleUsers.add(user);
             }
         } catch (SQLException e) {
@@ -833,7 +832,70 @@ public static void updateDeaths(int id, int celestialBodyId, int userId, Date de
 
         return singleUsers;
     }
+    public static List<User> selectAliveUsers() {
+        List<User> aliveUsersList = new ArrayList<>();
+        String query = "SELECT u.*" +
+                "FROM Users u " +
+                "LEFT JOIN Deaths d ON u.id = d.user_id " +
+                "WHERE d.user_id IS NULL";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
+                String email = resultSet.getString("email");
+                String name = resultSet.getString("name");
+                String surname = resultSet.getString("surname");
+                Date dateOfBirth = resultSet.getDate("date_of_birth");
 
+                User user = new User(id, username, password, email, name, surname, dateOfBirth);
+                aliveUsersList.add(user);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return aliveUsersList;
+    }
+    public static Journey getLastJourneyForUser(User user) {
+        String query = "SELECT j.id, j.destination_body_id, j.vehicle_code, j.departure_date, j.arrival_date " +
+                "FROM Journeys j " +
+                "JOIN JourneysUsers ju ON j.id = ju.journey_id " +
+                "WHERE ju.user_id = ? " +
+                "ORDER BY j.arrival_date DESC " +
+                "LIMIT 1";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, user.getId());
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int destinationBodyId = resultSet.getInt("destination_body_id");
+                String vehicleCode = resultSet.getString("vehicle_code");
+                Timestamp departureDate = resultSet.getTimestamp("departure_date");
+                Timestamp arrivalDate = resultSet.getTimestamp("arrival_date");
+
+                return new Journey(id, destinationBodyId, vehicleCode, departureDate, arrivalDate);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+    public static String getCelestialBodiesNameFromID(int id){
+        String query = "SELECT name FROM CelestialBodies WHERE id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next())
+                return resultSet.getString(1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
     private JDBCUtils() {
     }
     private static void showAlert(String title, String content) {
