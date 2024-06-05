@@ -1,25 +1,10 @@
-- ##### globalni current user (mora da se izbaci tamo iz liste SVIH LJUDI koje mogu da odu na journey sa tim userom)
+- #####TODO globalni current user (mora da se izbaci tamo iz liste SVIH LJUDI koje mogu da odu na journey sa tim userom)
 (sredio sa getterom, gde samo izbacim current usera pomocu instance app frameworka)
 
-- Kada se neki user pickuje, npr pickovali smo 5 usera, kada kliknemo SKIP TO NEXT DAY, ti useri ne treba ponovo da se pojave u LISTI GDE SU SVI USERI
-
-- Useri koji nisu na istoj planeti ne smeju da stoje u listi slobodnih ljudi za putovanje, vec moraju da se izbace
-
-- Ne moze da se ode na travel ako
-    1) nije pickovana planeta
-    2) nije pickovan journey
-    3) nije kupljena kuca na toj planeti
-    4) ako je kupio kucu sa 5 mesta, a oce da vodi 6 ljudi (mora da kupi jos jednu kucu ili tako nesto)
-
-- Sta ako user kupi 2 kuce na planeti, kako da znamo u koju kucu ide i u kojoj kuci se nalazi koji user? da li je to bitno?
 
 - Kada kliknemo TRAVEL, svi useri koji su selektovani, idu na journey do neke planete, ali dodeliti planeti ili Residentialbuilngu da su oni odmah vec tu (pa i dok traje joruney)
 
-- Dodati jos planeta
-
-- Filtrirati tabelu NA POCETKU za planete koje su habitable
-
-- Filtrirati tabelu PRILIKOM KLIKA NA SKIP DAY (mozda neka planeta vise nije habitable jer sledeci dan umru 50 ljudi na toj planeti)
+- Dodati da svaki user koji ode na putovanje kada kliknemo TRAVEL, ima sada jedan vise journeyUser
 
 - Dodati posebno polje za MISIJE, gde kada user klikne, otvara mu se novi prozor
 - Moze da ode na MISIJU samo za celestial koji nije OTKRIVEN jos

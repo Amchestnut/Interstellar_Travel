@@ -1,6 +1,7 @@
 package space_exploration.model.utility;
 
 import javafx.scene.control.Alert;
+import space_exploration.ApplicationFramework;
 import space_exploration.model.base.Server;
 import space_exploration.model.db_classes.*;
 
@@ -833,16 +834,31 @@ public class JDBCUtils {
 
 
     public static List<User> selectAvailableUsers() {
-        List<User> singleUsers = new ArrayList<>();
-        String query = "SELECT * " +
-                "FROM Users u " +
-                "LEFT JOIN Deaths d ON u.id = d.user_id " +
-                "LEFT JOIN HousingPurchases hp ON u.id = hp.user_id " +
-                "WHERE d.id IS NULL AND hp.id IS NULL";
+        List<User> availableUsers = new ArrayList<>();
+        Journey lastJourney = getLastJourneyForUser(ApplicationFramework.getInstance().getCurrentLoginedUser());
 
-        try (PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet resultSet = statement.executeQuery()) {
-
+        // Use planet with ID = 3 if no last journey
+        int celestialBodyId = (lastJourney != null) ? lastJourney.getDestinationBodyId() : 3;
+        String query="";
+        // Base query to find users on the same celestial body, excluding deceased users
+        if(celestialBodyId == 3)
+            query = "SELECT DISTINCT u.id, u.username, u.password, u.email, u.name, u.surname, u.date_of_birth " +
+                    "FROM Users u " +
+                    "LEFT JOIN Deaths d ON u.id = d.user_id " +
+                    "LEFT JOIN JourneysUsers ju ON u.id = ju.user_id " +
+                    "LEFT JOIN Journeys j ON ju.journey_id = j.id " +
+                    "WHERE d.id IS NULL AND (j.destination_body_id = ? OR j.destination_body_id IS NULL) AND u.id != ?";
+        else
+            query = "SELECT DISTINCT u.id, u.username, u.password, u.email, u.name, u.surname, u.date_of_birth " +
+                    "FROM Users u " +
+                    "LEFT JOIN Deaths d ON u.id = d.user_id " +
+                    "LEFT JOIN JourneysUsers ju ON u.id = ju.user_id " +
+                    "LEFT JOIN Journeys j ON ju.journey_id = j.id " +
+                    "WHERE d.id IS NULL AND j.destination_body_id = ? AND u.id != ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, celestialBodyId);
+            statement.setInt(2,ApplicationFramework.getInstance().getCurrentLoginedUser().getId());
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt(1);
                 String username = resultSet.getString(2);
@@ -853,14 +869,16 @@ public class JDBCUtils {
                 Date dateOfBirth = resultSet.getDate(7);
 
                 User user = new User(id, username, password, email, name, surname, dateOfBirth);
-                singleUsers.add(user);
+                availableUsers.add(user);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        return singleUsers;
+        return availableUsers;
     }
+
+
     public static List<User> selectAliveUsers() {
         List<User> aliveUsersList = new ArrayList<>();
         String query = "SELECT u.*" +
@@ -912,6 +930,50 @@ public class JDBCUtils {
         }
         return null;
     }
+
+    /*
+    public static boolean hasHouse(int userId, int celestialBodyId) {
+        String query = "SELECT SUM(rb.capacity) AS total_capacity " +
+                "FROM HousingPurchases hp " +
+                "JOIN ResidentialBuildings rb ON hp.building_id = rb.id " +
+                "JOIN CelestialBodies cb ON rb.celestial_body_id = cb.id " +
+                "WHERE hp.user_id = ? AND cb.id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            statement.setInt(2, celestialBodyId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("total_capacity");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return 0; // Return 0 if no data found
+    }
+
+     */
+
+    public static boolean hasHouse(int userId, int celestialBodyId) {
+        String query = "SELECT COUNT(*) AS house_count " +
+                "FROM HousingPurchases hp " +
+                "JOIN ResidentialBuildings rb ON hp.building_id = rb.id " +
+                "WHERE hp.user_id = ? AND rb.celestial_body_id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            statement.setInt(2, celestialBodyId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next() && resultSet.getInt("house_count") > 0) {
+                return true; // User owns at least one house on the specified celestial body
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error: " + e.getMessage(), e);
+        }
+        return false; // No houses found for the user on the specified celestial body
+    }
+
+
     public static String getCelestialBodiesNameFromID(int id){
         String query = "SELECT name FROM CelestialBodies WHERE id = ?";
 

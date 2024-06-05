@@ -9,12 +9,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import space_exploration.ApplicationFramework;
 import space_exploration.controller.*;
 import space_exploration.model.base.Server;
-import space_exploration.model.db_classes.CelestialBody;
-import space_exploration.model.db_classes.Journey;
-import space_exploration.model.db_classes.ResidentialBuilding;
-import space_exploration.model.db_classes.User;
+import space_exploration.model.db_classes.*;
+import space_exploration.model.utility.JDBCUtils;
+import java.util.List;
 
 
 public class MainView extends Scene {
@@ -71,14 +71,18 @@ public class MainView extends Scene {
         todaysDateLB = new Label(Server.SERVER.getToday().toString());
 
         journeysOL = FXCollections.observableArrayList();
-        housingOL = FXCollections.observableArrayList(Server.SERVER.getResidentialBuildings());
+        //housingOL = FXCollections.observableArrayList(Server.SERVER.getResidentialBuildings());
+        housingOL = FXCollections.observableArrayList();
         /// here i want to check if the celestial body is habitale or not with a QUERY to database, saying WHERE AND SATYSFYING all the criteria for a celestial body to be habitable
 
         allUsersOL = FXCollections.observableArrayList(Server.SERVER.getAvailableUsers());
         /// TODO: da li staviti trenutnog logovanog usera u pickovane usere??
         pickedUsersOL = FXCollections.observableArrayList();                          // TODO: na pocetku prazno, a posle prilikom clicka na button, dodacemo usera jednog po jednog u listu izabranih za putovanje
 
-        celestialBodiesOL = FXCollections.observableArrayList(Server.SERVER.getCelestialBodies());
+        Journey lastJourneyForUser= JDBCUtils.getLastJourneyForUser(ApplicationFramework.getInstance().getCurrentLoginedUser());
+        boolean goToEarth = (lastJourneyForUser != null && lastJourneyForUser.getDestinationBodyId() != 3);
+
+        celestialBodiesOL = FXCollections.observableArrayList(((goToEarth)?List.of(Server.SERVER.getCelestialBodies().get(2)):Server.SERVER.getHabitableCelestialBodies()));
 
         journeysLV = new ListView<>(journeysOL);
         housingLV = new ListView<>(housingOL);                                   //   journeysLV.setItems(FXCollections.observableArrayList("Mission 1", "Mission 2", "Mission 3"));
@@ -307,7 +311,32 @@ public class MainView extends Scene {
     public void setPickedUsersLV(ListView<User> pickedUsersLV) {
         this.pickedUsersLV = pickedUsersLV;
     }
+    public void update(){
+        Calendar calendar = Server.SERVER.getToday();
+
+
+
+        this.getJourneysLV().getItems().clear();
+        this.getHousingLV().getItems().clear();
+
+        List<User> filteredUser = JDBCUtils.selectAvailableUsers();
+        ObservableList<User> observableList = FXCollections.observableList(filteredUser);
+        this.getAllUsersLV().setItems(observableList);
+
+        this.getPickedUsersLV().getItems().clear();
+
+        this.getTodaysDateLB().setText(calendar.toString());
+
+        Journey lastJourneyForUser= JDBCUtils.getLastJourneyForUser(ApplicationFramework.getInstance().getCurrentLoginedUser());
+        boolean goToEarth = (lastJourneyForUser != null && lastJourneyForUser.getDestinationBodyId() != 3);
+        this.getCelestialBodiesTV().setItems(FXCollections.observableArrayList(((goToEarth)?List.of(Server.SERVER.getCelestialBodies().get(2)):Server.SERVER.getHabitableCelestialBodies())));
+        this.getHousingLV().refresh();
+        this.getPickedUsersLV().refresh();
+        this.getCelestialBodiesTV().refresh();
+        this.getAllUsersLV().refresh();
+    }
 }
+
 
 
 

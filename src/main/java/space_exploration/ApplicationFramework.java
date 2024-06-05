@@ -29,7 +29,7 @@ public class ApplicationFramework {
         this.mainStage = stage;
         JDBCUtils.connect(); // Initialize your DB connection
 
-        showMainView();     // FIRST SCREEN
+        showLoginView();     // FIRST SCREEN
         mainStage.show();
     }
 

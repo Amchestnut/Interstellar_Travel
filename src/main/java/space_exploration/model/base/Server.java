@@ -171,6 +171,23 @@ public class Server {
         this.deaths.clear();
         this.deaths.addAll(deaths);
     }
+    public void update(){
+        this.setCelestialBodies(JDBCUtils.selectAllFromCelestialBodies());
+        //this.setHabitabilityCriteria(JDBCUtils.selectAllFromHabitabilityCriteria());
+        this.setMissions(JDBCUtils.selectAllFromMissions());
+        this.setJourneys(JDBCUtils.selectAllFromJourneys());
+        this.setUsers(JDBCUtils.selectAllFromUsers());
+        this.setJourneysUsers(JDBCUtils.selectAllFromJourneysUsers());
+        this.setResidentialBuildings(JDBCUtils.selectAllFromResidentialBuildings());
+        this.setHousingPurchases(JDBCUtils.selectAllFromHousingPurchases());
+        this.setAvailableUsers(JDBCUtils.selectAvailableUsers());
+        this.setHabitableCelestialBodies(JDBCUtils.selectHabitableCelestialBodies());
+        this.setAliveUsers(JDBCUtils.selectAliveUsers());
+        this.setToday(JDBCUtils.selectFromCalendar());
+        this.setDeaths(JDBCUtils.selectAllFromDeaths());
+        this.setAvailableBuildings(JDBCUtils.selectAllAvailableFromResidentialBuildings());
+    }
+
 //    public void updateDeaths(){
 //        this.deaths.clear();
 //        this.deaths.addAll(JDBCUtils.selectAllFromDeaths());

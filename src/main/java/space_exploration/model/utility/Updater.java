@@ -34,31 +34,15 @@ public class Updater implements ISubscriber {
                         Journey lastJourney = JDBCUtils.getLastJourneyForUser(user);
                         JDBCUtils.insertIntoDeaths((lastJourney != null)?lastJourney.getDestinationBodyId():3, user.getId(), calendar.getToday(),calendar.getToday().getYear() - user.getDate_of_birth().getYear());
                     }
-                if(ApplicationFramework.getInstance().getMainStage().getScene() instanceof MainView) {
+                if(ApplicationFramework.getInstance().getMainStage().getScene() instanceof MainView){
                     MainView mainView = (MainView) ApplicationFramework.getInstance().getMainStage().getScene();
-                    CelestialBody selectedItem = mainView.getCelestialBodiesTV().getSelectionModel().getSelectedItem();
-                    if (selectedItem != null) {
-                        List<Journey> filteredJourneys = JDBCUtils.getJourneysOnlyForThisCelestial(selectedItem);
-                        ObservableList<Journey> observableJourneyList = FXCollections.observableArrayList(filteredJourneys);
-                        mainView.getJourneysLV().setItems(observableJourneyList);
-                    }
-                    List<User> filteredUser = JDBCUtils.selectAvailableUsers();
-                    ObservableList<User> observableUserList = FXCollections.observableArrayList(filteredUser);
-                    mainView.getAllUsersLV().setItems(observableUserList);
-                    mainView.getTodaysDateLB().setText(calendar.toString());
+                    mainView.update();
                 }
+
+
             }
         }
     }
-
-    /*
-    if (selectedItem != null) {
-            List<Journey> filteredJourneys = JDBCUtils.getJourneysOnlyForThisCelestial(selectedItem);
-            ObservableList<Journey> observableJourneyList = FXCollections.observableArrayList(filteredJourneys);
-            mainView.getJourneysLV().setItems(observableJourneyList);  // Directly set items on ListView
-            System.out.println("Filtered Journeys: " + observableJourneyList);
-        }
-     */
     public static Updater getUpdater() {
         if (instance == null) {
             instance = new Updater();

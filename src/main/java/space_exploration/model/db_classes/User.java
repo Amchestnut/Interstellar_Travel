@@ -108,14 +108,7 @@ public class User implements IPublisher {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                '}';
+        return name + " " + surname + ", Person id: " + id;
     }
     @Override
     public void addSubscriber(ISubscriber iSubscriber) {

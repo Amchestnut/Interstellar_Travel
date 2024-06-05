@@ -26,7 +26,7 @@ public class LoginAction implements EventHandler<ActionEvent> {
             User loggedInUser = JDBCUtils.checkLogin(username, password);
             if(loggedInUser != null){
                 ApplicationFramework.getInstance().setCurrentLoginedUser(loggedInUser);
-                ApplicationFramework.getInstance().showMainView();          // if everything ok, go to main view
+                ApplicationFramework.getInstance().showMainView();          // if everythings ok, go to main view
             }
             else {
                 // Not ok
