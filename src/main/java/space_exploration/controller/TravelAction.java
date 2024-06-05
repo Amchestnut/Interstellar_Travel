@@ -4,14 +4,13 @@ package space_exploration.controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import space_exploration.ApplicationFramework;
+import space_exploration.model.base.Server;
 import space_exploration.model.db_classes.CelestialBody;
 import space_exploration.model.db_classes.Journey;
 import space_exploration.model.db_classes.User;
 import space_exploration.model.utility.JDBCUtils;
 import space_exploration.view.MainView;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +38,9 @@ public class TravelAction implements EventHandler<ActionEvent> {
                 for(User user : ljudiKojiPutujuNaPlanetu) {
                     JDBCUtils.insertIntoJourneysUsers(user.getId(), selectedJourney.getId());
                 }
+                JDBCUtils.getAllUsersJourneys();
                 mainView.update();
+                Server.SERVER.update();
             }
 
         }

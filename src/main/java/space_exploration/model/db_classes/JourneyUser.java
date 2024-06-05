@@ -1,6 +1,7 @@
 package space_exploration.model.db_classes;
 
 import space_exploration.Messages.MessageUpdate;
+import space_exploration.model.utility.JDBCUtils;
 import space_exploration.observer.IPublisher;
 import space_exploration.observer.ISubscriber;
 
@@ -40,11 +41,9 @@ public class JourneyUser implements IPublisher {
 
     @Override
     public String toString() {
-        return "JourneyUser{" +
-                "userId=" + userId +
-                ", journeyId=" + journeyId +
-                '}';
+        return "Journey to: " + JDBCUtils.getCelestialNameFromJourneyID(journeyId);
     }
+
     @Override
     public void addSubscriber(ISubscriber iSubscriber) {
         this.subscribers.add(iSubscriber);

@@ -32,6 +32,8 @@ public class MainView extends Scene {
     private Button nextDaybutton;
     private Button buyHousePlaceButton;
     private Button travelButton;
+    private Button allBoughtBuildingsButton;
+    private Button historyJourneysButton;
 
     private ObservableList<Journey> journeysOL;
     private ObservableList<ResidentialBuilding> housingOL;
@@ -63,6 +65,8 @@ public class MainView extends Scene {
         nextDaybutton = new Button("Skip to next day");
         buyHousePlaceButton = new Button("Buy house place in selected residential building");
         travelButton = new Button("TRAVEL");
+        allBoughtBuildingsButton = new Button("See all bought buildings");
+        historyJourneysButton = new Button("See all bought journeys");
 
         controlPanelLB = new Label("Control panel...");
         pickAnyPlanetYouWantLB = new Label("Pick any planet or satellite you want to move on. Every one of them is habitable (for now ;))");
@@ -76,8 +80,7 @@ public class MainView extends Scene {
         /// here i want to check if the celestial body is habitale or not with a QUERY to database, saying WHERE AND SATYSFYING all the criteria for a celestial body to be habitable
 
         allUsersOL = FXCollections.observableArrayList(Server.SERVER.getAvailableUsers());
-        /// TODO: da li staviti trenutnog logovanog usera u pickovane usere??
-        pickedUsersOL = FXCollections.observableArrayList();                          // TODO: na pocetku prazno, a posle prilikom clicka na button, dodacemo usera jednog po jednog u listu izabranih za putovanje
+        pickedUsersOL = FXCollections.observableArrayList();
 
         Journey lastJourneyForUser= JDBCUtils.getLastJourneyForUser(ApplicationFramework.getInstance().getCurrentLoginedUser());
         boolean goToEarth = (lastJourneyForUser != null && lastJourneyForUser.getDestinationBodyId() != 3);
@@ -133,7 +136,7 @@ public class MainView extends Scene {
         // Position elements in BorderPane
         root.setTop(topHBox);
 
-        HBox skipAndTravel = new HBox(1000, nextDaybutton, travelButton);
+        HBox skipAndTravel = new HBox(200, nextDaybutton, allBoughtBuildingsButton, historyJourneysButton, travelButton);
         VBox bottomVbox = new VBox(10, pickAnyPlanetYouWantLB, celestialBodiesTV, skipAndTravel);
         bottomVbox.setAlignment(Pos.CENTER);
         root.setCenter(bottomVbox);  // Ensuring TableView is added
@@ -146,9 +149,11 @@ public class MainView extends Scene {
         filterBuldingsForThisCelestialButton.setOnAction(new FilterBuildingForThisCelestial(this));
         filterJourneysForThisCelestialButton.setOnAction(new FilterJourneysForThisCelestial(this));
         pickPersonButton.setOnAction(new PickPersonAction(this));
-        nextDaybutton.setOnAction(e->Server.SERVER.getToday().nextDay());       // TODO oni koji su pickovani, ne treba ponovo da se pojave u originalnoj listi !! opasno
+        nextDaybutton.setOnAction(e->Server.SERVER.getToday().nextDay());
         buyHousePlaceButton.setOnAction(new BuyHousePlaceAction(this));
         travelButton.setOnAction(new TravelAction(this));
+        historyJourneysButton.setOnAction(e -> ApplicationFramework.getInstance().showHistoryJourneysView());
+        allBoughtBuildingsButton.setOnAction(e -> ApplicationFramework.getInstance().showAllBoughtBuildingView());
     }
 
 
@@ -312,9 +317,8 @@ public class MainView extends Scene {
         this.pickedUsersLV = pickedUsersLV;
     }
     public void update(){
+
         Calendar calendar = Server.SERVER.getToday();
-
-
 
         this.getJourneysLV().getItems().clear();
         this.getHousingLV().getItems().clear();
@@ -329,11 +333,18 @@ public class MainView extends Scene {
 
         Journey lastJourneyForUser= JDBCUtils.getLastJourneyForUser(ApplicationFramework.getInstance().getCurrentLoginedUser());
         boolean goToEarth = (lastJourneyForUser != null && lastJourneyForUser.getDestinationBodyId() != 3);
+
+        System.out.println(goToEarth);
+        System.out.println(lastJourneyForUser);
+
         this.getCelestialBodiesTV().setItems(FXCollections.observableArrayList(((goToEarth)?List.of(Server.SERVER.getCelestialBodies().get(2)):Server.SERVER.getHabitableCelestialBodies())));
         this.getHousingLV().refresh();
         this.getPickedUsersLV().refresh();
         this.getCelestialBodiesTV().refresh();
         this.getAllUsersLV().refresh();
+
+        Server.SERVER.update();
+
     }
 }
 

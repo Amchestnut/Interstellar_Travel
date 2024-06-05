@@ -1,6 +1,5 @@
 package space_exploration.model.base;
 
-import space_exploration.ApplicationFramework;
 import space_exploration.model.utility.JDBCUtils;
 import space_exploration.model.db_classes.*;
 
@@ -27,10 +26,13 @@ public class Server {
     private final List<ResidentialBuilding> availableBuildings = new ArrayList<>();
     private final List<User> aliveUsers = new ArrayList<>();
     private Calendar today;
+    private final List<ResidentialBuilding> usersBuildings = new ArrayList<>();
+    private final List<Journey> usersJourneys = new ArrayList<>();
 
     private Server() {
+        this.setToday(JDBCUtils.selectFromCalendar());
+        today.nextDay();
         this.setCelestialBodies(JDBCUtils.selectAllFromCelestialBodies());
-        //this.setHabitabilityCriteria(JDBCUtils.selectAllFromHabitabilityCriteria());
         this.setMissions(JDBCUtils.selectAllFromMissions());
         this.setJourneys(JDBCUtils.selectAllFromJourneys());
         this.setUsers(JDBCUtils.selectAllFromUsers());
@@ -40,21 +42,37 @@ public class Server {
         this.setAvailableUsers(JDBCUtils.selectAvailableUsers());
         this.setHabitableCelestialBodies(JDBCUtils.selectHabitableCelestialBodies());
         this.setAliveUsers(JDBCUtils.selectAliveUsers());
-        this.setToday(JDBCUtils.selectFromCalendar());
         this.setDeaths(JDBCUtils.selectAllFromDeaths());
         this.setAvailableBuildings(JDBCUtils.selectAllAvailableFromResidentialBuildings());
+        this.setUsersBuildings(JDBCUtils.getAllUsersResidentialBuildings());
+        this.setUsersJourneys(JDBCUtils.getAllUsersJourneys());
     }
 
+    public List<ResidentialBuilding> getUsersBuildings() {
+        return usersBuildings;
+    }
+
+    public List<Journey> getUsersJourneys() {
+        return usersJourneys;
+    }
+    private void setUsersJourneys(List<Journey> usersJourneys){
+        this.usersJourneys.clear();
+        if(usersJourneys != null)
+            this.usersJourneys.addAll(usersJourneys);
+    }
+    private void setUsersBuildings(List<ResidentialBuilding> usersBuildings){
+        this.usersBuildings.clear();
+        if(usersBuildings != null)
+            this.usersBuildings.addAll(usersBuildings);
+    }
     public List<User> getAvailableUsers() {
-        availableUsers.remove(ApplicationFramework.getInstance().getCurrentLoginedUser());
-        // TODO: dodati i da ne moze oni koji su vec pickovani
+//        availableUsers.remove(ApplicationFramework.getInstance().getCurrentLoginedUser());
         return availableUsers;
     }
 
     public List<ResidentialBuilding> getAvailableBuildings() {
         return availableBuildings;
     }
-
 
 
     public List<User> getAliveUsers() {
@@ -79,7 +97,6 @@ public class Server {
     }
 
     private void setToday(Calendar today) {
-        today.nextDay();
         this.today = today;
     }
 
@@ -172,8 +189,8 @@ public class Server {
         this.deaths.addAll(deaths);
     }
     public void update(){
+        this.setToday(JDBCUtils.selectFromCalendar());
         this.setCelestialBodies(JDBCUtils.selectAllFromCelestialBodies());
-        //this.setHabitabilityCriteria(JDBCUtils.selectAllFromHabitabilityCriteria());
         this.setMissions(JDBCUtils.selectAllFromMissions());
         this.setJourneys(JDBCUtils.selectAllFromJourneys());
         this.setUsers(JDBCUtils.selectAllFromUsers());
@@ -183,9 +200,10 @@ public class Server {
         this.setAvailableUsers(JDBCUtils.selectAvailableUsers());
         this.setHabitableCelestialBodies(JDBCUtils.selectHabitableCelestialBodies());
         this.setAliveUsers(JDBCUtils.selectAliveUsers());
-        this.setToday(JDBCUtils.selectFromCalendar());
         this.setDeaths(JDBCUtils.selectAllFromDeaths());
         this.setAvailableBuildings(JDBCUtils.selectAllAvailableFromResidentialBuildings());
+        this.setUsersBuildings(JDBCUtils.getAllUsersResidentialBuildings());
+        this.setUsersJourneys(JDBCUtils.getAllUsersJourneys());
     }
 
 //    public void updateDeaths(){

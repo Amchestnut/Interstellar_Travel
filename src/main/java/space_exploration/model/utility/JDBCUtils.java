@@ -83,12 +83,12 @@ public class JDBCUtils {
                 "AND (cb.highest_temperature - cb.lowest_temperature) <= 120 " +
                 "AND cb.oxygen_percentage BETWEEN 15 AND 25 " +
                 "AND (cb.oxygen_percentage + cb.other_gas_percentage) BETWEEN 90 AND 99 " +
-                "AND cb.gravitational_field_height >= 1000 " +
+                "AND cb.gravitational_field_height <= 1000 " +
                 "AND cb.orbital_speed BETWEEN 25 AND 35 " +
                 "AND (SELECT COUNT(*) FROM Deaths d " +
                 "WHERE d.celestial_body_id = cb.id " +
                 "AND d.age_at_death < 40 " +
-                "AND d.death_date BETWEEN DATE_SUB(?, INTERVAL 1 YEAR) AND ?) <= 20";
+                "AND d.death_date BETWEEN DATE_SUB(?, INTERVAL 1 YEAR) AND ?) <= 20 AND cb.id != 3";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setDate(1, calendar.getToday());
@@ -277,10 +277,10 @@ public class JDBCUtils {
     public static List<ResidentialBuilding> getResidentialBuildingsForThisPlanet(CelestialBody celestialBody) {
         List<ResidentialBuilding> buildingsList = new ArrayList<>();
 
-        String query = "SELECT * FROM ResidentialBuildings WHERE celestial_body_id = ?"; // Fixed query
+        String query = "SELECT * FROM ResidentialBuildings WHERE celestial_body_id = ? AND capacity > 0";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, celestialBody.getId()); // Assuming celestialBody has a getId() method
+            statement.setInt(1, celestialBody.getId());
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
@@ -832,7 +832,7 @@ public class JDBCUtils {
         return null;  // Return null if no user is found
     }
 
-
+/*
     public static List<User> selectAvailableUsers() {
         List<User> availableUsers = new ArrayList<>();
         Journey lastJourney = getLastJourneyForUser(ApplicationFramework.getInstance().getCurrentLoginedUser());
@@ -878,6 +878,61 @@ public class JDBCUtils {
         return availableUsers;
     }
 
+ */
+
+    public static List<User> selectAvailableUsers() {
+        List<User> availableUsers = new ArrayList<>();
+        Journey lastJourney = getLastJourneyForUser(ApplicationFramework.getInstance().getCurrentLoginedUser());
+
+        int celestialBodyId = (lastJourney != null) ? lastJourney.getDestinationBodyId() : 3;
+        String query;
+
+        // Adjust query based on whether the last journey exists or defaults to ID = 3
+
+        if (celestialBodyId == 3) {     /// IDE U PICKU MATERINU, i moze da vodi ljude koji su na zemlji
+            query = "SELECT DISTINCT u.id, u.username, u.password, u.email, u.name, u.surname, u.date_of_birth " +
+                    "FROM Users u " +
+                    "LEFT JOIN Deaths d ON u.id = d.user_id " +
+                    "LEFT JOIN JourneysUsers ju ON u.id = ju.user_id " +
+                    "LEFT JOIN Journeys j ON ju.journey_id = j.id " +
+                    "WHERE d.id IS NULL AND (j.destination_body_id = ? OR j.destination_body_id IS NULL) AND u.id != ?";
+        }
+        else {      /// IDE NA ZEMLJU, i treba da se vrate na zemlju
+            query = "SELECT DISTINCT u.id, u.username, u.password, u.email, u.name, u.surname, u.date_of_birth " +
+                    "FROM Users u " +
+                    "LEFT JOIN Deaths d ON u.id = d.user_id " +
+                    "WHERE d.id IS NULL AND u.id != ?  AND (SELECT j.destination_body_id FROM Journeys j JOIN JourneysUsers ju ON j.id = ju.journey_id WHERE ju.user_id = u.id ORDER BY j.arrival_date DESC LIMIT 1) = ?";
+        }
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+
+            if(celestialBodyId != 3) {
+                statement.setInt(1, ApplicationFramework.getInstance().getCurrentLoginedUser().getId());
+                statement.setInt(2, celestialBodyId);
+            }
+            else{
+                statement.setInt(1, celestialBodyId);
+                statement.setInt(2, ApplicationFramework.getInstance().getCurrentLoginedUser().getId());
+            }
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
+                String email = resultSet.getString("email");
+                String name = resultSet.getString("name");
+                String surname = resultSet.getString("surname");
+                Date dateOfBirth = resultSet.getDate("date_of_birth");
+
+                User user = new User(id, username, password, email, name, surname, dateOfBirth);
+                availableUsers.add(user);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching available users: " + e.getMessage(), e);
+        }
+
+        return availableUsers;
+    }
 
     public static List<User> selectAliveUsers() {
         List<User> aliveUsersList = new ArrayList<>();
@@ -931,28 +986,56 @@ public class JDBCUtils {
         return null;
     }
 
-    /*
-    public static boolean hasHouse(int userId, int celestialBodyId) {
-        String query = "SELECT SUM(rb.capacity) AS total_capacity " +
-                "FROM HousingPurchases hp " +
-                "JOIN ResidentialBuildings rb ON hp.building_id = rb.id " +
-                "JOIN CelestialBodies cb ON rb.celestial_body_id = cb.id " +
-                "WHERE hp.user_id = ? AND cb.id = ?";
-
+    public static List<ResidentialBuilding> getAllUsersResidentialBuildings() {
+        List<ResidentialBuilding> buildingsList = new ArrayList<>();
+        String query = "SELECT rb.*" +
+                "FROM ResidentialBuildings rb " +
+                "JOIN HousingPurchases hp ON hp.building_id = rb.id " +
+                "WHERE hp.user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, userId);
-            statement.setInt(2, celestialBodyId);
+            statement.setInt(1, ApplicationFramework.getInstance().getCurrentLoginedUser().getId());
             ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getInt("total_capacity");
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                String name = resultSet.getString(2);
+                int celestialBodyId = resultSet.getInt(3);
+                int capacity = resultSet.getInt(4);
+                Date buildDate = resultSet.getDate(5);
+
+                ResidentialBuilding building = new ResidentialBuilding(id, name, celestialBodyId, capacity, buildDate);
+                buildingsList.add(building);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return 0; // Return 0 if no data found
-    }
+        System.out.println(buildingsList);
+        return buildingsList;
 
-     */
+    }
+    public static List<Journey> getAllUsersJourneys(){
+        List<Journey> journeyList = new ArrayList<>();
+        String query = "SELECT j.id, j.destination_body_id, j.vehicle_code, j.departure_date, j.arrival_date " +
+                "FROM Journeys j " +
+                "JOIN JourneysUsers ju ON j.id = ju.journey_id " +
+                "WHERE ju.user_id = ? ";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, ApplicationFramework.getInstance().getCurrentLoginedUser().getId());
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int destinationBodyId = resultSet.getInt("destination_body_id");
+                String vehicleCode = resultSet.getString("vehicle_code");
+                Timestamp departureDate = resultSet.getTimestamp("departure_date");
+                Timestamp arrivalDate = resultSet.getTimestamp("arrival_date");
+
+                journeyList.add(new Journey(id, destinationBodyId, vehicleCode, departureDate, arrivalDate));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(journeyList);
+        return journeyList;
+    }
 
     public static boolean hasHouse(int userId, int celestialBodyId) {
         String query = "SELECT COUNT(*) AS house_count " +
@@ -972,7 +1055,23 @@ public class JDBCUtils {
         }
         return false; // No houses found for the user on the specified celestial body
     }
+    public static String getCelestialNameFromJourneyID(int id){
+        String query = "SELECT c.name  " +
+                "FROM CelestialBody c " +
+                "JOIN Journeys j ON j.destination_body_id = c.id " +
+                "WHERE j.id = ? " +
+                "ORDER BY j.arrival_date DESC ";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next())
+                return resultSet.getString(0);
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 
     public static String getCelestialBodiesNameFromID(int id){
         String query = "SELECT name FROM CelestialBodies WHERE id = ?";

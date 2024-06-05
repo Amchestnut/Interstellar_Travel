@@ -24,6 +24,7 @@ public class BuyHousePlaceAction implements EventHandler<ActionEvent> {
 
         if(selectedResidentialBuilding != null){
             JDBCUtils.insertIntoHousingPurchases(ApplicationFramework.getInstance().getCurrentLoginedUser().getId(), selectedResidentialBuilding.getId(), Server.SERVER.getToday().getToday());
+            JDBCUtils.getAllUsersResidentialBuildings();
             selectedResidentialBuilding.lowerCapacity();
         }
     }

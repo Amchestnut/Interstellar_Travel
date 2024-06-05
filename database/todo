@@ -1,11 +1,3 @@
-- #####TODO globalni current user (mora da se izbaci tamo iz liste SVIH LJUDI koje mogu da odu na journey sa tim userom)
-(sredio sa getterom, gde samo izbacim current usera pomocu instance app frameworka)
-
-
-- Kada kliknemo TRAVEL, svi useri koji su selektovani, idu na journey do neke planete, ali dodeliti planeti ili Residentialbuilngu da su oni odmah vec tu (pa i dok traje joruney)
-
-- Dodati da svaki user koji ode na putovanje kada kliknemo TRAVEL, ima sada jedan vise journeyUser
-
 - Dodati posebno polje za MISIJE, gde kada user klikne, otvara mu se novi prozor
 - Moze da ode na MISIJU samo za celestial koji nije OTKRIVEN jos
 - Kada ga otkrije, u zavisnosti da li je habitable ili nije,
@@ -13,15 +5,3 @@
 - Nakon toga dodati funkcionalnost da se tabele dodatno filtriraju po tome da li je planeta istrazena.
 npr ako je researched = false, nece se prikazati u originalnoj tabeli planeta gde korisnik moze da ide
 
-- Napraviti neki HISTORY prozorcic, gde moze dimitrije da udje da vidi:
-     1) istoriju svih journeya na koje je user isao
-     2) sve kuce koje je user kupio na svim planetama
-
-- Gledati na kojoj se planeti se sada nalazi user, jer ne sme da se dozvoli da putuje sa planete 1 na planetu 2, ako planeta 1 (FROM) nije Earth.
-
-
-(msm da ovo moramo, jer kaze u zahtevu zadatka implementirati "kupovinu" karata i buildinga)
-- OPCIONO: ako stignemo, mozemo da dodamo PRICE i MONEY,
-        npr da kuce imaju PRICE
-        npr da journey imaju PRICE za 1, 2, ili 10 ljudi koje neko oce da vodi sa sobom
-        npr da USERI imaju MONEY, da mogu da kupe sve to

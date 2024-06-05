@@ -1,16 +1,11 @@
 package space_exploration;
 
-
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import space_exploration.model.base.Server;
 import space_exploration.model.db_classes.User;
 import space_exploration.model.utility.JDBCUtils;
-import space_exploration.model.utility.Updater;
-import space_exploration.view.MainView;
-import space_exploration.view.RegistrationView;
-import space_exploration.view.LoginView;
-import space_exploration.view.StartView;
+import space_exploration.view.*;
 
 public class ApplicationFramework {
 
@@ -29,7 +24,7 @@ public class ApplicationFramework {
         this.mainStage = stage;
         JDBCUtils.connect(); // Initialize your DB connection
 
-        showLoginView();     // FIRST SCREEN
+        showStartView();     // FIRST SCREEN
         mainStage.show();
     }
 
@@ -51,6 +46,18 @@ public class ApplicationFramework {
     public void showMainView() {
         MainView mainView = new MainView();
         mainStage.setScene(mainView);
+    }
+
+    public void showAllBoughtBuildingView() {
+        JDBCUtils.getAllUsersResidentialBuildings();
+        AllBoughtBuildingsView allBoughtBuildingsView = new AllBoughtBuildingsView();
+        mainStage.setScene(allBoughtBuildingsView);
+    }
+
+    public void showHistoryJourneysView() {
+        JDBCUtils.getAllUsersJourneys();
+        HistoryJourneysView historyJourneysView = new HistoryJourneysView();
+        mainStage.setScene(historyJourneysView);
     }
 
     public Stage getMainStage() {
