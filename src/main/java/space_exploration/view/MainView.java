@@ -9,10 +9,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import space_exploration.controller.BuyHousePlaceAction;
-import space_exploration.controller.FilterBuildingForThisCelestial;
-import space_exploration.controller.FilterJourneysForThisCelestial;
-import space_exploration.controller.PickPersonAction;
+import space_exploration.controller.*;
 import space_exploration.model.base.Server;
 import space_exploration.model.db_classes.CelestialBody;
 import space_exploration.model.db_classes.Journey;
@@ -34,6 +31,7 @@ public class MainView extends Scene {
     private Button filterJourneysForThisCelestialButton;
     private Button nextDaybutton;
     private Button buyHousePlaceButton;
+    private Button travelButton;
 
     private ObservableList<Journey> journeysOL;
     private ObservableList<ResidentialBuilding> housingOL;
@@ -64,6 +62,7 @@ public class MainView extends Scene {
         pickPlanetButton = new Button("Pick this planet");
         nextDaybutton = new Button("Skip to next day");
         buyHousePlaceButton = new Button("Buy house place in selected residential building");
+        travelButton = new Button("TRAVEL");
 
         controlPanelLB = new Label("Control panel...");
         pickAnyPlanetYouWantLB = new Label("Pick any planet or satellite you want to move on. Every one of them is habitable (for now ;))");
@@ -74,6 +73,7 @@ public class MainView extends Scene {
         journeysOL = FXCollections.observableArrayList();
         housingOL = FXCollections.observableArrayList(Server.SERVER.getResidentialBuildings());
         /// here i want to check if the celestial body is habitale or not with a QUERY to database, saying WHERE AND SATYSFYING all the criteria for a celestial body to be habitable
+
         allUsersOL = FXCollections.observableArrayList(Server.SERVER.getAvailableUsers());
         /// TODO: da li staviti trenutnog logovanog usera u pickovane usere??
         pickedUsersOL = FXCollections.observableArrayList();                          // TODO: na pocetku prazno, a posle prilikom clicka na button, dodacemo usera jednog po jednog u listu izabranih za putovanje
@@ -129,7 +129,8 @@ public class MainView extends Scene {
         // Position elements in BorderPane
         root.setTop(topHBox);
 
-        VBox bottomVbox = new VBox(10, pickAnyPlanetYouWantLB, celestialBodiesTV, nextDaybutton);
+        HBox skipAndTravel = new HBox(1000, nextDaybutton, travelButton);
+        VBox bottomVbox = new VBox(10, pickAnyPlanetYouWantLB, celestialBodiesTV, skipAndTravel);
         bottomVbox.setAlignment(Pos.CENTER);
         root.setCenter(bottomVbox);  // Ensuring TableView is added
     }
@@ -141,8 +142,9 @@ public class MainView extends Scene {
         filterBuldingsForThisCelestialButton.setOnAction(new FilterBuildingForThisCelestial(this));
         filterJourneysForThisCelestialButton.setOnAction(new FilterJourneysForThisCelestial(this));
         pickPersonButton.setOnAction(new PickPersonAction(this));
-        nextDaybutton.setOnAction(e->Server.SERVER.getToday().nextDay());
+        nextDaybutton.setOnAction(e->Server.SERVER.getToday().nextDay());       // TODO oni koji su pickovani, ne treba ponovo da se pojave u originalnoj listi !! opasno
         buyHousePlaceButton.setOnAction(new BuyHousePlaceAction(this));
+        travelButton.setOnAction(new TravelAction(this));
     }
 
 

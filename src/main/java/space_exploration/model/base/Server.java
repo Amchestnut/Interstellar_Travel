@@ -1,5 +1,6 @@
 package space_exploration.model.base;
 
+import space_exploration.ApplicationFramework;
 import space_exploration.model.utility.JDBCUtils;
 import space_exploration.model.db_classes.*;
 
@@ -45,6 +46,8 @@ public class Server {
     }
 
     public List<User> getAvailableUsers() {
+        availableUsers.remove(ApplicationFramework.getInstance().getCurrentLoginedUser());
+        // TODO: dodati i da ne moze oni koji su vec pickovani
         return availableUsers;
     }
 

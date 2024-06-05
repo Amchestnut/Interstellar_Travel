@@ -1,6 +1,7 @@
 package space_exploration.model.db_classes;
 
 import space_exploration.Messages.MessageUpdate;
+import space_exploration.model.utility.JDBCUtils;
 import space_exploration.observer.IPublisher;
 import space_exploration.observer.ISubscriber;
 
@@ -81,13 +82,7 @@ public class ResidentialBuilding implements IPublisher {
 
     @Override
     public String toString() {
-        return "ResidentialBuilding{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", celestialBodyId=" + celestialBodyId +
-                ", capacity=" + capacity +
-                ", buildDate=" + buildDate +
-                '}';
+        return "Residential Building: " + name + ", on planet: " + JDBCUtils.getCelestialBodiesNameFromID(this.celestialBodyId) + ", with capacity for: " + capacity + " people";
     }
     @Override
     public void addSubscriber(ISubscriber iSubscriber) {

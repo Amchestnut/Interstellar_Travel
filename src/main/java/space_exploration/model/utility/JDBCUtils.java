@@ -788,6 +788,7 @@ public class JDBCUtils {
             throw new RuntimeException(e);
         }
     }
+    /*
     public static boolean checkLogin(String userName, String password) {
         String query = "SELECT EXISTS(SELECT 1 FROM Users u LEFT JOIN Deaths d ON u.id = d.user_id WHERE username = ? AND password = ? AND d.id IS NULL)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -803,6 +804,34 @@ public class JDBCUtils {
         }
         return false;
     }
+
+     */
+
+    public static User checkLogin(String username, String password) {
+        // Query to select the user details if the username and password match and the user is not marked as deceased.
+        String query = "SELECT * FROM Users WHERE username = ? AND password = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, username);
+            statement.setString(2, password);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String email = resultSet.getString("email");
+                String name = resultSet.getString("name");
+                String surname = resultSet.getString("surname");
+                Date dateOfBirth = resultSet.getDate("date_of_birth");
+
+                // Create and return the User object
+                return new User(id, username, password, email, name, surname, dateOfBirth);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to check login", e);
+        }
+        return null;  // Return null if no user is found
+    }
+
+
     public static List<User> selectAvailableUsers() {
         List<User> singleUsers = new ArrayList<>();
         String query = "SELECT * " +

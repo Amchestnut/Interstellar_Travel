@@ -4,6 +4,7 @@ package space_exploration;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import space_exploration.model.base.Server;
+import space_exploration.model.db_classes.User;
 import space_exploration.model.utility.JDBCUtils;
 import space_exploration.model.utility.Updater;
 import space_exploration.view.MainView;
@@ -13,6 +14,7 @@ import space_exploration.view.StartView;
 
 public class ApplicationFramework {
 
+    private User currentLoginedUser;
     private Stage mainStage;
     private static ApplicationFramework instance;
 
@@ -57,5 +59,13 @@ public class ApplicationFramework {
 
     public void setMainStage(Stage mainStage) {
         this.mainStage = mainStage;
+    }
+
+    public User getCurrentLoginedUser() {
+        return currentLoginedUser;
+    }
+
+    public void setCurrentLoginedUser(User currentLoginedUser) {
+        this.currentLoginedUser = currentLoginedUser;
     }
 }

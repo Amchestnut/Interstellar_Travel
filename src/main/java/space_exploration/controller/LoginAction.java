@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import space_exploration.ApplicationFramework;
+import space_exploration.model.db_classes.User;
 import space_exploration.model.utility.JDBCUtils;
 import space_exploration.view.LoginView;
 
@@ -20,19 +21,21 @@ public class LoginAction implements EventHandler<ActionEvent> {
     public void handle(ActionEvent actionEvent) {
         if(validateInput()){
             String username = loginView.getUsernameTF().getText();
-            String password = loginView.getPasswordTF().getText(); // Consider hashing this in a real application
+            String password = loginView.getPasswordTF().getText();
 
-            if(JDBCUtils.checkLogin(username, password)){
-                ApplicationFramework.getInstance().showMainView();          // if everythings ok, go to main view
+            User loggedInUser = JDBCUtils.checkLogin(username, password);
+            if(loggedInUser != null){
+                ApplicationFramework.getInstance().setCurrentLoginedUser(loggedInUser);
+                ApplicationFramework.getInstance().showMainView();          // if everything ok, go to main view
             }
-            else{
-                // not ok
+            else {
+                // Not ok
                 // should pop up an ERROR WINDOW and say: "Username or password incorrect, try again."
                 // There should indeed exist a "go back" button so the user can go back to registrate first!
             }
         }
-
     }
+
 
     private boolean validateInput() {
         if (loginView.getUsernameTF().getText().isEmpty() || loginView.getPasswordTF().getText().isEmpty()) {
