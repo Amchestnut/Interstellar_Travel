@@ -45,7 +45,6 @@ public class MainView extends Stage {
 
         initialisation();
         positioning();
-        actions();
 
         Scene scene = new Scene(root, 1200, 900);
         super.setScene(scene);
@@ -53,8 +52,8 @@ public class MainView extends Stage {
     }
 
     private void initialisation(){
-        filterBtn = new Button("Filter something");        /// maybe add money per resident ??? So they have money to buy
-        pickPersonBtn= new Button("Pick this person");               ///
+        filterBtn = new Button("Filter something");
+        pickPersonBtn= new Button("Pick this person");
         pickPlanetBtn = new Button("Pick this planet");
 
         controlPanel = new Label("Control panel...");
@@ -126,48 +125,5 @@ public class MainView extends Stage {
     }
 
 
-    private void actions() {
-//        pickPlanetBtn.setOnAction(new PickPlanetAction(this));      /// this je view
-//        pickPersonBtn.setOnAction(new PickPersonAction(this));
-//        filterBtn.setOnAction(new FilterSomething(this));
-    }
-
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-private HBox filterBox() {
-        HBox hbox = new HBox(10, new Label("First name:"), this.tfFirstNameFilter,
-                                new Label("Last name:"), this.tfLastNameFilter,
-                                new Label("Year:"), this.tfYearFilter,
-                                this.btFilter);
-        hbox.setPadding(new Insets(10));
-        hbox.setAlignment(Pos.CENTER);
-        return hbox;
-    }
-
-    private GridPane addBox() {
-        GridPane gridPane = new GridPane();
-        gridPane.addRow(0, new Label("First name:"), this.tfFirstName);
-        gridPane.addRow(1, new Label("Last name:"), this.tfLastName);
-        gridPane.addRow(2, new Label("Date of birth:"), this.dpDateOfBirth);
-        gridPane.add(this.btAdd, 1, 3);
-        gridPane.setVgap(10);
-        gridPane.setHgap(10);
-        gridPane.setPadding(new Insets(10));
-        gridPane.setAlignment(Pos.CENTER);
-        return gridPane;
-    }
- */

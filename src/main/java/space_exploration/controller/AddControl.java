@@ -30,15 +30,6 @@ public class AddControl implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent actionEvent) {
-//        String firstName = this.firstNameTextField.getText().trim();
-//        String lastName = this.lastNameTextField.getText().trim();
-//        LocalDate dateOfBirth = this.dateOfBirthPicker.getValue();
-//        JDBCUtils.insertIntoPerson(firstName, lastName, dateOfBirth);
-//        List<Person> people = JDBCUtils.selectAllFromPerson();
-//        Server.SERVER.setPeople(people);
-//        this.personTableView.setItems(FXCollections.observableArrayList(people));
-//        this.firstNameTextField.clear();
-//        this.lastNameTextField.clear();
-//        this.dateOfBirthPicker.setValue(LocalDate.now().minusYears(20));
+
     }
 }
