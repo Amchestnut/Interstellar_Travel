@@ -1,7 +1,0 @@
-- Dodati posebno polje za MISIJE, gde kada user klikne, otvara mu se novi prozor
-- Moze da ode na MISIJU samo za celestial koji nije OTKRIVEN jos
-- Kada ga otkrije, u zavisnosti da li je habitable ili nije,
-
-- Nakon toga dodati funkcionalnost da se tabele dodatno filtriraju po tome da li je planeta istrazena.
-npr ako je researched = false, nece se prikazati u originalnoj tabeli planeta gde korisnik moze da ide
-
