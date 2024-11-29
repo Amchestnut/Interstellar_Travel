@@ -1,6 +1,10 @@
 # Space Exploration: JDBC-Based Database Exploration Tool
 **Space Exploration** is a comprehensive Java-based application designed to simulate and manage space exploration activities using a relational database. It provides users with interactive features to explore celestial bodies, manage space missions, and track journeys through intuitive views and backend database integration. The project leverages **JDBC** for database operations and JavaFX for the user interface, offering an educational and engaging experience in understanding database functionality and SQL queries.
 
+<p align="center"> 
+  <img src="resources/interstellar_travelling.png" alt="ClassyCraft Interface" width="1000" />
+</p>
+
 ## Features
 **Interactive Database Exploration**:  
 - Retrieve detailed data about celestial bodies, missions, and journeys.
@@ -36,9 +40,10 @@
 - Learn how backend data flows and interacts with a frontend UI.
 
 
-## Example File: database_script.sql
-This file contains the SQL script to generate and populate the necessary tables and data for the application. 
-Replace database_script.sql with the following commands for your needs:
+## Example SQL File:
+Example files: **SpaceExploration.sql** and **SpaceExploration_2_populate_data.sql**  
+This files are located in the Database package, they contains the SQL scripts to generate and populate the necessary tables and data for the application.  
+Replace the scripts with the following commands for your needs:  
 
 ```
 CREATE DATABASE IF NOT EXISTS spaceexploration;
