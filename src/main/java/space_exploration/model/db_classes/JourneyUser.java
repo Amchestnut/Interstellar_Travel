@@ -1,19 +1,20 @@
 package space_exploration.model.db_classes;
 
 import space_exploration.Messages.MessageUpdate;
+import space_exploration.model.utility.JDBCUtils;
 import space_exploration.observer.IPublisher;
 import space_exploration.observer.ISubscriber;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class JourneysUsers implements IPublisher {
+public class JourneyUser implements IPublisher {
     private List<ISubscriber> subscribers = new ArrayList<>();
 
     private int userId;
     private int journeyId;
 
-    public JourneysUsers(int userId, int journeyId) {
+    public JourneyUser(int userId, int journeyId) {
         this.userId = userId;
         this.journeyId = journeyId;
     }
@@ -40,11 +41,9 @@ public class JourneysUsers implements IPublisher {
 
     @Override
     public String toString() {
-        return "JourneysUsers{" +
-                "userId=" + userId +
-                ", journeyId=" + journeyId +
-                '}';
+        return "Journey to: " + JDBCUtils.getCelestialNameFromJourneyID(journeyId);
     }
+
     @Override
     public void addSubscriber(ISubscriber iSubscriber) {
         this.subscribers.add(iSubscriber);

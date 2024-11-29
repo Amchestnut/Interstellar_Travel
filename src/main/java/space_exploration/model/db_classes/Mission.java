@@ -8,19 +8,19 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HousingPurchases implements IPublisher {
+public class Mission implements IPublisher {
     private List<ISubscriber> subscribers = new ArrayList<>();
 
     private int id;
-    private int userId;
-    private int buildingId;
-    private Date purchaseDate;
+    private int celestialBodyId;
+    private Date startDate;
+    private Date endDate;
 
-    public HousingPurchases(int id, int userId, int buildingId, Date purchaseDate) {
+    public Mission(int id, int celestialBodyId, Date startDate, Date endDate) {
         this.id = id;
-        this.userId = userId;
-        this.buildingId = buildingId;
-        this.purchaseDate = purchaseDate;
+        this.celestialBodyId = celestialBodyId;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public int getId() {
@@ -33,43 +33,43 @@ public class HousingPurchases implements IPublisher {
 
     }
 
-    public int getUserId() {
-        return userId;
+    public int getCelestialBodyId() {
+        return celestialBodyId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setCelestialBodyId(int celestialBodyId) {
+        this.celestialBodyId = celestialBodyId;
         notifySubscribers(new MessageUpdate(this));
 
     }
 
-    public int getBuildingId() {
-        return buildingId;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public void setBuildingId(int buildingId) {
-        this.buildingId = buildingId;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
         notifySubscribers(new MessageUpdate(this));
 
     }
 
-    public Date getPurchaseDate() {
-        return purchaseDate;
+    public Date getEndDate() {
+        return endDate;
     }
 
-    public void setPurchaseDate(Date purchaseDate) {
-        this.purchaseDate = purchaseDate;
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
         notifySubscribers(new MessageUpdate(this));
 
     }
 
     @Override
     public String toString() {
-        return "HousingPurchases{" +
+        return "Mission{" +
                 "id=" + id +
-                ", userId=" + userId +
-                ", buildingId=" + buildingId +
-                ", purchaseDate=" + purchaseDate +
+                ", celestialBodyId=" + celestialBodyId +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
                 '}';
     }
     @Override

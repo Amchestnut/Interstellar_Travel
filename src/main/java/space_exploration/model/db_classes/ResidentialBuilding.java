@@ -1,6 +1,7 @@
 package space_exploration.model.db_classes;
 
 import space_exploration.Messages.MessageUpdate;
+import space_exploration.model.utility.JDBCUtils;
 import space_exploration.observer.IPublisher;
 import space_exploration.observer.ISubscriber;
 
@@ -8,7 +9,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResidentialBuildings implements IPublisher {
+public class ResidentialBuilding implements IPublisher {
     private List<ISubscriber> subscribers = new ArrayList<>();
 
     private int id;
@@ -17,7 +18,7 @@ public class ResidentialBuildings implements IPublisher {
     private int capacity;
     private Date buildDate;
 
-    public ResidentialBuildings(int id, String name, int celestialBodyId, int capacity, Date buildDate) {
+    public ResidentialBuilding(int id, String name, int celestialBodyId, int capacity, Date buildDate) {
         this.id = id;
         this.name = name;
         this.celestialBodyId = celestialBodyId;
@@ -31,7 +32,7 @@ public class ResidentialBuildings implements IPublisher {
 
     public void setId(int id) {
         this.id = id;
-        notifySubscribers(new MessageUpdate(this));
+        // notifySubscribers(new MessageUpdate(this));
 
     }
 
@@ -41,7 +42,7 @@ public class ResidentialBuildings implements IPublisher {
 
     public void setName(String name) {
         this.name = name;
-        notifySubscribers(new MessageUpdate(this));
+        // notifySubscribers(new MessageUpdate(this));
 
     }
 
@@ -51,7 +52,7 @@ public class ResidentialBuildings implements IPublisher {
 
     public void setCelestialBodyId(int celestialBodyId) {
         this.celestialBodyId = celestialBodyId;
-        notifySubscribers(new MessageUpdate(this));
+        // notifySubscribers(new MessageUpdate(this));
 
     }
 
@@ -61,7 +62,7 @@ public class ResidentialBuildings implements IPublisher {
 
     public void setCapacity(int capacity) {
         this.capacity = capacity;
-        notifySubscribers(new MessageUpdate(this));
+        // notifySubscribers(new MessageUpdate(this));
 
     }
 
@@ -71,19 +72,17 @@ public class ResidentialBuildings implements IPublisher {
 
     public void setBuildDate(Date buildDate) {
         this.buildDate = buildDate;
-        notifySubscribers(new MessageUpdate(this));
+        // notifySubscribers(new MessageUpdate(this));
 
+    }
+    public void lowerCapacity() {
+        this.capacity --;
+        notifySubscribers(new MessageUpdate(this));
     }
 
     @Override
     public String toString() {
-        return "ResidentialBuildings{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", celestialBodyId=" + celestialBodyId +
-                ", capacity=" + capacity +
-                ", buildDate=" + buildDate +
-                '}';
+        return "Residential Building: " + name + ", on planet: " + JDBCUtils.getCelestialBodiesNameFromID(this.celestialBodyId) + ", with capacity for: " + capacity + " people";
     }
     @Override
     public void addSubscriber(ISubscriber iSubscriber) {

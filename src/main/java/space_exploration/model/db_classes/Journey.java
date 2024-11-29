@@ -1,6 +1,7 @@
 package space_exploration.model.db_classes;
 
 import space_exploration.Messages.MessageUpdate;
+import space_exploration.model.utility.JDBCUtils;
 import space_exploration.observer.IPublisher;
 import space_exploration.observer.ISubscriber;
 
@@ -8,7 +9,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Journeys implements IPublisher {
+public class Journey implements IPublisher {
     private List<ISubscriber> subscribers = new ArrayList<>();
 
     private int id;
@@ -17,7 +18,7 @@ public class Journeys implements IPublisher {
     private Timestamp departureDate;
     private Timestamp arrivalDate;
 
-    public Journeys(int id, int destinationBodyId, String vehicleCode, Timestamp departureDate, Timestamp arrivalDate) {
+    public Journey(int id, int destinationBodyId, String vehicleCode, Timestamp departureDate, Timestamp arrivalDate) {
         this.id = id;
         this.destinationBodyId = destinationBodyId;
         this.vehicleCode = vehicleCode;
@@ -74,16 +75,9 @@ public class Journeys implements IPublisher {
         notifySubscribers(new MessageUpdate(this));
 
     }
-
     @Override
     public String toString() {
-        return "Journeys{" +
-                "id=" + id +
-                ", destinationBodyId=" + destinationBodyId +
-                ", vehicleCode='" + vehicleCode + '\'' +
-                ", departureDate=" + departureDate +
-                ", arrivalDate=" + arrivalDate +
-                '}';
+        return "Journey to : " + JDBCUtils.getCelestialBodiesNameFromID(this.destinationBodyId) + " departureDate : " + departureDate + " arrivalDate :" + arrivalDate + " vehicleCode: " + vehicleCode;
     }
     @Override
     public void addSubscriber(ISubscriber iSubscriber) {

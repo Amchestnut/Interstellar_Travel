@@ -4,10 +4,10 @@ import space_exploration.Messages.MessageUpdate;
 import space_exploration.observer.IPublisher;
 import space_exploration.observer.ISubscriber;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-public class Users implements IPublisher {
+import java.sql.Date;
+public class User implements IPublisher {
     private List<ISubscriber> subscribers = new ArrayList<>();
 
     private int id;
@@ -16,18 +16,18 @@ public class Users implements IPublisher {
     private String email;
     private String name;
     private String surname;
-    private Date dateOfBirth;
-    private Date lastRegistrationDate;
+    private Date date_of_birth;
 
-    public Users(int id, String username, String password, String email, String name, String surname, Date dateOfBirth, Date lastRegistrationDate) {
+    /// TODO: dal da mu stavimo i planetu na kojo jtrenutno zivi? defaultno ce da bude earth, pa posle da menjamo
+    public User(int id, String username, String password, String email, String name, String surname,Date date_of_birth) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.name = name;
         this.surname = surname;
-        this.dateOfBirth = dateOfBirth;
-        this.lastRegistrationDate = lastRegistrationDate;
+        this.date_of_birth = date_of_birth;
+
     }
 
     public int getId() {
@@ -46,6 +46,8 @@ public class Users implements IPublisher {
 
     public void setUsername(String username) {
         this.username = username;
+        notifySubscribers(new MessageUpdate(this));
+
     }
 
     public String getPassword() {
@@ -54,6 +56,8 @@ public class Users implements IPublisher {
 
     public void setPassword(String password) {
         this.password = password;
+        notifySubscribers(new MessageUpdate(this));
+
     }
 
     public String getEmail() {
@@ -62,6 +66,8 @@ public class Users implements IPublisher {
 
     public void setEmail(String email) {
         this.email = email;
+        notifySubscribers(new MessageUpdate(this));
+
     }
 
     public String getName() {
@@ -70,6 +76,8 @@ public class Users implements IPublisher {
 
     public void setName(String name) {
         this.name = name;
+        notifySubscribers(new MessageUpdate(this));
+
     }
 
     public String getSurname() {
@@ -78,36 +86,29 @@ public class Users implements IPublisher {
 
     public void setSurname(String surname) {
         this.surname = surname;
+        notifySubscribers(new MessageUpdate(this));
+
     }
 
-    public Date getDateOfBirth() {
-        return dateOfBirth;
+    public List<ISubscriber> getSubscribers() {
+        return subscribers;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setSubscribers(List<ISubscriber> subscribers) {
+        this.subscribers = subscribers;
     }
 
-    public Date getLastRegistrationDate() {
-        return lastRegistrationDate;
+    public Date getDate_of_birth() {
+        return date_of_birth;
     }
 
-    public void setLastRegistrationDate(Date lastRegistrationDate) {
-        this.lastRegistrationDate = lastRegistrationDate;
+    public void setDate_of_birth(Date date_of_birth) {
+        this.date_of_birth = date_of_birth;
     }
 
     @Override
     public String toString() {
-        return "Users{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
-                ", lastRegistrationDate=" + lastRegistrationDate +
-                '}';
+        return name + " " + surname + ", Person id: " + id;
     }
     @Override
     public void addSubscriber(ISubscriber iSubscriber) {
